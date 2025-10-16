@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronRight, FileText, DollarSign, Target, Eye } from 'lucide-react';
+import { FileText } from 'lucide-react';
 
 export const ParentCard = ({ card, isSeen, onViewEmail, onCustomizeAction }) => {
   const displayInfo = card.kid || card.sender || { name: 'User', initial: 'U' };

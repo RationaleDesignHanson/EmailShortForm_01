@@ -1,23 +1,10 @@
 import React from 'react';
-import { X, Reply, Archive, Delete, ChevronLeft } from 'lucide-react';
+import { Reply, Archive, Delete, ChevronLeft } from 'lucide-react';
 
 export const FullEmailView = ({ email, onClose, onReply, onArchive, onDelete }) => {
   if (!email) return null;
 
-  const formatDate = (dateString) => {
-    try {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch {
-      return dateString;
-    }
-  };
+  // formatDate function removed - not used
 
   const getPriorityColor = (priority) => {
     switch (priority) {

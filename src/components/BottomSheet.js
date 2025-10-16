@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   TrendingUp, 
   Calendar, 
@@ -8,41 +8,10 @@ import {
   Award, 
   AlertTriangle, 
   Sparkles,
-  ChevronUp,
-  ChevronDown,
   X
 } from 'lucide-react';
 
-const PriorityMeter = ({ level, label, value }) => {
-  const configs = {
-    critical: { fill: value || 100, color: 'from-red-500 to-orange-500' },
-    high: { fill: value || 75, color: 'from-orange-500 to-yellow-500' },
-    medium: { fill: value || 50, color: 'from-yellow-500 to-blue-500' },
-    low: { fill: value || 25, color: 'from-blue-500 to-slate-500' }
-  };
-
-  const config = configs[level] || configs.low;
-
-  return (
-    <div className="relative w-full">
-      <div className="text-white/70 text-xs mb-2 font-medium">{label}</div>
-      <div className="relative h-6 bg-white/10 backdrop-blur-md rounded-full overflow-hidden border border-white/20">
-        <div 
-          className={'absolute inset-y-0 left-0 bg-gradient-to-r ' + config.color + ' transition-all duration-700 ease-out'}
-          style={{ width: config.fill + '%' }}
-        >
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent animate-pulse" />
-          </div>
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-white text-xs font-bold drop-shadow-lg">{config.fill}%</span>
-        </div>
-      </div>
-    </div>
-  );
-};
+// PriorityMeter removed - not used in this component
 
 export const BottomSheet = ({ 
   isOpen, 
@@ -69,11 +38,6 @@ export const BottomSheet = ({
 
   const currentConfig = archetypeConfigs[activeArchetype];
   const CurrentIcon = currentConfig?.icon || Briefcase;
-  
-  const typeCards = cards.filter(c => c.type === activeArchetype && c.state !== 'dismissed');
-  const criticalCount = typeCards.filter(c => c.priority === 'critical').length;
-  const highCount = typeCards.filter(c => c.priority === 'high').length;
-  const unseenCount = typeCards.filter(c => c.state === 'unseen').length;
 
   const archetypeGroups = [
       { label: 'Professional', archetypes: [

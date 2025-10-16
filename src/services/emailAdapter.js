@@ -2,21 +2,7 @@ import axios from 'axios';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
-// Mock data import (for demo mode)
-const generateMockEmails = () => {
-  const getTimeAgo = (daysAgo, hoursAgo = 0) => {
-    if (daysAgo === 0 && hoursAgo < 1) return 'Just now';
-    if (daysAgo === 0) return hoursAgo + 'h ago';
-    if (daysAgo === 1) return 'Yesterday';
-    if (daysAgo < 7) return daysAgo + 'd ago';
-    return Math.floor(daysAgo / 7) + 'w ago';
-  };
-
-  return [
-    // Sample emails for demo - using the same data from App.js
-    { id: 'demo-1', type: 'caregiver', state: 'unseen', priority: 'critical', hpa: 'Sign & Send', kid: { name: 'Sophie Martinez', initial: 'S', grade: '3rd Grade' }, timeAgo: getTimeAgo(0, 2), title: 'Field Trip Permission - Due Wednesday', summary: 'Museum visit Friday requires signed form by Wed 5 PM', metaCTA: 'Swipe Right: Quick Sign & Send', requiresSignature: true, formFields: [{ label: 'Student Name', autoFillValue: 'Sophie Martinez' }, { label: 'Parent/Guardian', autoFillValue: 'Parent Name' }, { label: 'Emergency Contact', autoFillValue: '(555) 123-4567' }], dataSources: [{ subject: 'Field Trip Permission', from: 'Mrs. Anderson', date: getTimeAgo(0, 2) }] }
-  ];
-};
+// Mock data handled in getFullMockData method
 
 class EmailAdapter {
   constructor() {

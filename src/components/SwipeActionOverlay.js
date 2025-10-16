@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, Archive, X, Send, ThumbsUp, ThumbsDown, ShoppingBag, Heart } from 'lucide-react';
+import { Check, X, Send, Heart } from 'lucide-react';
 
 export const SwipeActionOverlay = ({ direction, cardType, swipeDistance }) => {
   const isLongSwipe = Math.abs(swipeDistance) > 200;

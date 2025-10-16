@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Clock, Calendar, Settings, Check } from 'lucide-react';
+import { X, Clock, Check } from 'lucide-react';
 
 export const SaveLaterModal = ({ email, onSave, onCancel }) => {
   const [selectedTime, setSelectedTime] = useState('6h');
