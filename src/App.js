@@ -506,7 +506,6 @@ const App = () => {
   const [showUndo, setShowUndo] = useState(false);
   const [lastAction, setLastAction] = useState(null);
   const [skipTracker, setSkipTracker] = useState({}); // Track skips by sender domain
-  const [interactionCount, setInteractionCount] = useState(0); // Track user interactions for tutorial
 
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
   const filteredCards = cards.filter(c => c.type === activeType && c.state !== 'dismissed' && c.state !== 'deleted' && c.state !== 'archived');
@@ -622,8 +621,6 @@ const App = () => {
 
     setCards(prev => prev.map(c => c.id === card.id ? { ...c, state: newState } : c));
     
-    // Increment interaction count for tutorial fade
-    setInteractionCount(prev => prev + 1);
     
     setShowUndo(true);
     setTimeout(() => setShowUndo(false), 3000);
