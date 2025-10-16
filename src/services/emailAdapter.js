@@ -218,13 +218,9 @@ class EmailAdapter {
 
   // Extract archetype-specific fields
   extractArchetypeFields(email) {
-    const archetype = this.mapToArchetype(email);
-    const fields = {};
-    
-    // Add archetype-specific data extraction logic here
     // For now, return basic structure
-    
-    return fields;
+    // TODO: Add archetype-specific data extraction logic
+    return {};
   }
 
   // Format timestamp
@@ -256,16 +252,11 @@ class EmailAdapter {
 
   // Get available user accounts
   async getAvailableAccounts() {
-    try {
-      // This would list available credential files
-      // For now, return the known accounts from your setup
-      return [
-        { email: 'hanson@rationalework', displayName: 'Hanson (Work)' },
-        { email: 'thematthanson@gmail.com', displayName: 'Matt (Personal)' }
-      ];
-    } catch (error) {
-      return [];
-    }
+    // Return the known accounts from your setup
+    return [
+      { email: 'hanson@rationalework', displayName: 'Hanson (Work)' },
+      { email: 'thematthanson@gmail.com', displayName: 'Matt (Personal)' }
+    ];
   }
 
   // Process emails through backend pipeline
@@ -285,4 +276,5 @@ class EmailAdapter {
   }
 }
 
-export default new EmailAdapter();
+const emailAdapter = new EmailAdapter();
+export default emailAdapter;
