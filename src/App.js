@@ -8,8 +8,6 @@ import { ActionCustomizer } from './components/ActionCustomizer';
 import { SaveLaterModal } from './components/SaveLaterModal';
 import { UnsubscribeModal } from './components/UnsubscribeModal';
 import { ProgressCounter } from './components/ProgressCounter';
-import { DataModeToggle } from './components/DataModeToggle';
-import emailAdapter from './services/emailAdapter';
 
 // Priority Meter Component (liquid glass style)
 const PriorityMeter = ({ level, label }) => {
@@ -509,12 +507,6 @@ const App = () => {
   const [lastAction, setLastAction] = useState(null);
   const [skipTracker, setSkipTracker] = useState({}); // Track skips by sender domain
   const [interactionCount, setInteractionCount] = useState(0); // Track user interactions for tutorial
-  const [demoMode, setDemoMode] = useState(true); // Demo vs real data mode
-  const [selectedAccount, setSelectedAccount] = useState('hanson@rationalework');
-  const [availableAccounts] = useState([
-    { email: 'hanson@rationalework', displayName: 'Hanson (Work)' },
-    { email: 'thematthanson@gmail.com', displayName: 'Matt (Personal)' }
-  ]);
 
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
   const filteredCards = cards.filter(c => c.type === activeType && c.state !== 'dismissed' && c.state !== 'deleted' && c.state !== 'archived');
@@ -534,28 +526,10 @@ const App = () => {
   const SNAP_THRESHOLD = 200;
   const SNAP_ZONE = 20;
 
-  // Load emails when mode or account changes
+  // Initialize with demo data
   useEffect(() => {
-    const loadEmails = async () => {
-      try {
-        emailAdapter.setDemoMode(demoMode);
-        if (!demoMode) {
-          emailAdapter.setUserEmail(selectedAccount);
-        }
-        
-        const emails = await emailAdapter.getEmails(50);
-        setCards(emails);
-        setCurrentIndex(0);
-      } catch (error) {
-        console.error('Error loading emails:', error);
-        // Fallback to demo mode on error
-        setDemoMode(true);
-        setCards(generateInitialCards());
-      }
-    };
-
-    loadEmails();
-  }, [demoMode, selectedAccount]);
+    setCards(generateInitialCards());
+  }, []);
 
   useEffect(() => {
     if (view === 'feed' && filteredCards[currentIndex]) {
@@ -853,15 +827,6 @@ const App = () => {
   // Main swipe feed
   return (
     <div className="w-full h-screen bg-slate-950">
-      {/* Data Mode Toggle */}
-      <DataModeToggle
-        demoMode={demoMode}
-        onToggle={setDemoMode}
-        availableAccounts={availableAccounts}
-        selectedAccount={selectedAccount}
-        onAccountChange={setSelectedAccount}
-        isAuthenticated={true} // Will check real auth status later
-      />
 
       {/* Global Progress Counter */}
       <ProgressCounter 
@@ -924,15 +889,6 @@ const App = () => {
           );
         })}
 
-        {/* Tutorial Instructions - Only show for first 3 interactions */}
-        {interactionCount < 3 && (
-          <div 
-            className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 backdrop-blur-md px-6 py-2 rounded-full text-white text-xs z-50 border border-white/20 transition-opacity duration-500"
-            style={{ opacity: Math.max(0, 1 - (interactionCount / 3)) }}
-          >
-            👁️ Right: Mark Seen • ✓ Left: Done • Long Swipe: Action/Skip
-          </div>
-        )}
       </div>
     </div>
   );
