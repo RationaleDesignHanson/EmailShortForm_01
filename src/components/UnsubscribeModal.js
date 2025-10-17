@@ -115,7 +115,7 @@ export const UnsubscribeModal = ({ senderInfo, skipCount, onUnsubscribe, onHide,
 
           <div className="mt-4 text-center">
             <div className="text-slate-400 text-xs">
-              This won't affect your Gmail inbox - only what you see in SwipeFeed
+              This won't affect your Gmail inbox — only what you see in zero
             </div>
           </div>
         </div>

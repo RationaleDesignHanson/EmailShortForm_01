@@ -6,14 +6,14 @@ export const OnboardingTutorial = ({ onComplete }) => {
 
   const steps = [
     {
-      title: 'Welcome to SwipeFeed! 👋',
-      content: 'You\'re about to experience email management like never before. SwipeFeed intelligently sorts your emails into 8 different archetypes based on your life patterns.',
+      title: 'Welcome to zero! 👋',
+      content: 'zero helps you clear your inbox fast. We group emails into 8 simple categories so you can swipe through what matters.',
       icon: <Sparkles className="text-yellow-400" size={48} />,
       action: 'Get Started'
     },
     {
       title: 'Meet Sarah Chen 👩‍💼',
-      content: 'You\'ll be experiencing SwipeFeed as Sarah - a working parent juggling family, career, and personal life. Her emails represent real-world scenarios you might face.',
+      content: "You'll try zero as Sarah — a working parent juggling family, career, and life. These are realistic scenarios you'll recognize.",
       icon: <div className="text-4xl">👨‍👩‍👧‍👦</div>,
       action: 'Continue'
     },
@@ -33,13 +33,13 @@ export const OnboardingTutorial = ({ onComplete }) => {
     },
     {
       title: 'Smart Categories 🎯',
-      content: 'SwipeFeed automatically sorts emails into 8 life archetypes:\n• Family & Caregiving\n• Sales & Business\n• Shopping & Deals\n• Travel & Status\n• Security & Identity\n• Executive Leadership\n• Project Coordination\n• Learning & Innovation',
+      content: 'zero automatically sorts emails into 8 simple categories:\n• Family & Caregiving\n• Sales & Business\n• Shopping & Deals\n• Travel & Status\n• Security & Identity\n• Executive Leadership\n• Project Coordination\n• Learning & Innovation',
       icon: <div className="text-4xl">🎭</div>,
       action: 'Explore Categories'
     },
     {
       title: 'Ready to Swipe! 🚀',
-      content: 'You\'re all set! Start with Sarah\'s family emails and experience how SwipeFeed makes inbox management effortless and intuitive.',
+      content: "You're all set! Start with Sarah's family emails and see how fast zero helps you get to done.",
       icon: <CheckCircle className="text-green-400" size={48} />,
       action: 'Start Swiping'
     }

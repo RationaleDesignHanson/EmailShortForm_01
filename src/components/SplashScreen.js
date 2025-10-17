@@ -55,20 +55,20 @@ export const SplashScreen = ({ onEnter }) => {
         {/* Title */}
         <h1 className="text-4xl font-bold text-white mb-4 flex items-center justify-center gap-3">
           <Sparkles className="text-yellow-400" size={32} />
-          SwipeFeed
+          zero
           <Sparkles className="text-yellow-400" size={32} />
         </h1>
 
         {/* Subtitle */}
         <p className="text-xl text-white/80 mb-8 leading-relaxed">
-          Experience the future of email management through intelligent archetype-based sorting
+          Clear your inbox fast. Swipe to keep, act, or save for later.
         </p>
 
         {/* Demo Badge */}
         <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 mb-8 border border-white/20">
           <div className="text-white/90 font-semibold mb-2">🎭 Demo Experience</div>
           <div className="text-white/70 text-sm">
-            You'll be playing as <strong>Sarah Chen</strong>, a working parent managing family, career, and personal life through SwipeFeed's intelligent email categorization.
+            You'll be playing as <strong>Sarah Chen</strong>, a working parent managing family, career, and personal life through zero's smart, category‑based inbox.
           </div>
         </div>
 
@@ -110,7 +110,7 @@ export const SplashScreen = ({ onEnter }) => {
               </>
             ) : (
               <>
-                Enter SwipeFeed Demo
+                Enter zero demo
                 <ArrowRight size={20} />
               </>
             )}
