@@ -9,6 +9,10 @@ import { ActionCustomizer } from './components/ActionCustomizer';
 import { SaveLaterModal } from './components/SaveLaterModal';
 import { UnsubscribeModal } from './components/UnsubscribeModal';
 import { ProgressCounter } from './components/ProgressCounter';
+import { CelebrationScreen } from './components/CelebrationScreen';
+import { SplashScreen } from './components/SplashScreen';
+import { OnboardingTutorial } from './components/OnboardingTutorial';
+import emailAdapter from './services/emailAdapter';
 
 // Priority Meter Component (liquid glass style)
 const PriorityMeter = ({ level, label }) => {
@@ -489,9 +493,11 @@ const isPromotionalSender = (domain) => {
 };
 
 const App = () => {
+  // App State Management
+  const [appState, setAppState] = useState('splash'); // 'splash', 'onboarding', 'feed', 'celebration'
   const [view, setView] = useState('feed');
   const [activeType, setActiveType] = useState('caregiver');
-  const [cards, setCards] = useState(generateInitialCards());
+  const [cards, setCards] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -507,6 +513,8 @@ const App = () => {
   const [showUndo, setShowUndo] = useState(false);
   const [lastAction, setLastAction] = useState(null);
   const [skipTracker, setSkipTracker] = useState({}); // Track skips by sender domain
+  const [completedArchetypes, setCompletedArchetypes] = useState([]);
+  const [interactionCount, setInteractionCount] = useState(0);
 
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
   const filteredCards = cards.filter(c => c.type === activeType && c.state !== 'dismissed' && c.state !== 'deleted' && c.state !== 'archived');
@@ -526,24 +534,36 @@ const App = () => {
   const SNAP_THRESHOLD = 200;
   const SNAP_ZONE = 20;
 
-  // Initialize with demo data and generate backgrounds
+  // Initialize with coherent demo data and generate backgrounds
   useEffect(() => {
-    const initializeCards = async () => {
-      const initialCards = generateInitialCards();
-      
-      // Generate AI backgrounds for each card
-      const cardsWithBackgrounds = await Promise.all(
-        initialCards.map(async (card) => {
-          const aiBackground = await imageGenerator.generateBackground(card);
-          return { ...card, aiBackground };
-        })
-      );
-      
-      setCards(cardsWithBackgrounds);
-    };
+    if (appState === 'feed') {
+      const initializeCards = async () => {
+        const coherentCards = emailAdapter.getFullMockData();
+        
+        // Generate AI backgrounds for each card
+        const cardsWithBackgrounds = await Promise.all(
+          coherentCards.map(async (card) => {
+            const aiBackground = await imageGenerator.generateBackground(card);
+            return { ...card, aiBackground };
+          })
+        );
+        
+        setCards(cardsWithBackgrounds);
+      };
 
-    initializeCards();
-  }, []);
+      initializeCards();
+    }
+  }, [appState]);
+
+  // Check for archetype completion and trigger celebration
+  useEffect(() => {
+    if (filteredCards.length === 0 && cards.length > 0 && appState === 'feed') {
+      if (!completedArchetypes.includes(activeType)) {
+        setCompletedArchetypes([...completedArchetypes, activeType]);
+        setAppState('celebration');
+      }
+    }
+  }, [filteredCards.length, cards.length, activeType, completedArchetypes, appState]);
 
   useEffect(() => {
     if (view === 'feed' && filteredCards[currentIndex]) {
@@ -670,6 +690,24 @@ const App = () => {
   const handleCustomizeAction = (card) => {
     setCurrentCard(card);
     setShowActionCustomizer(true);
+  };
+
+  // App State Handlers
+  const handleSplashComplete = () => {
+    setAppState('onboarding');
+  };
+
+  const handleOnboardingComplete = () => {
+    setAppState('feed');
+  };
+
+  const handleCelebrationContinue = () => {
+    // Move to next archetype or back to feed
+    const currentIndex = archetypes.indexOf(activeType);
+    const nextIndex = (currentIndex + 1) % archetypes.length;
+    setActiveType(archetypes[nextIndex]);
+    setCurrentIndex(0);
+    setAppState('feed');
   };
 
   const handleSaveAction = (newAction) => {
@@ -832,6 +870,24 @@ const App = () => {
     );
   }
 
+  // Render different app states
+  if (appState === 'splash') {
+    return <SplashScreen onEnter={handleSplashComplete} />;
+  }
+
+  if (appState === 'onboarding') {
+    return <OnboardingTutorial onComplete={handleOnboardingComplete} />;
+  }
+
+  if (appState === 'celebration') {
+    return (
+      <CelebrationScreen 
+        archetype={activeType} 
+        onContinue={handleCelebrationContinue} 
+      />
+    );
+  }
+
   // Calculate progress
   const totalEmails = cards.length;
   const processedEmails = cards.filter(c => ['read', 'processed', 'dismissed', 'replied', 'converted'].includes(c.state)).length;
@@ -869,34 +925,46 @@ const App = () => {
         </div>
       )}
 
-      <div className="relative w-full h-full flex items-center justify-center" onMouseDown={handleDragStart} onMouseMove={handleDragMove} onMouseUp={handleDragEnd} onTouchStart={handleDragStart} onTouchMove={handleDragMove} onTouchEnd={handleDragEnd}>
+      <div className="relative w-full h-full flex items-center justify-center">
         {filteredCards.map((card, index) => {
-          const offset = (index - currentIndex) * 30; // Increased offset for better separation
+          const offset = (index - currentIndex) * 15; // Subtle offset for stacking
           const adjustedOffsetY = offset + (isDragging && index === currentIndex ? (dragOffset.y / window.innerHeight) * 100 : 0);
           const adjustedOffsetX = isDragging && index === currentIndex ? dragOffset.x : 0;
           const isHorizontal = Math.abs(dragOffset.x) > Math.abs(dragOffset.y);
           const rotation = isDragging && index === currentIndex ? (dragOffset.x / 30) : 0;
-          const scale = 1 - Math.abs(index - currentIndex) * 0.05; // More pronounced scale difference
+          const scale = 1 - Math.abs(index - currentIndex) * 0.03; // Subtle scale for depth
+          const isTopCard = index === currentIndex;
           
           return (
-            <div key={card.id} className="absolute" style={{ 
-              transform: `translateY(${adjustedOffsetY}px) translateX(${adjustedOffsetX}px) rotate(${rotation}deg) scale(${scale})`, 
-              opacity: Math.abs(index - currentIndex) > 1 ? 0 : 1, // Hide cards beyond immediate next/prev
-              zIndex: filteredCards.length - Math.abs(index - currentIndex), 
-              transition: isDragging ? 'none' : 'transform 0.3s ease-out, opacity 0.3s ease-out',
-              top: '50%',
-              left: '50%',
-              marginTop: '-200px',
-              marginLeft: '-200px'
-            }}>
+            <div 
+              key={card.id} 
+              className="absolute" 
+              style={{ 
+                transform: `translateY(${adjustedOffsetY}px) translateX(${adjustedOffsetX}px) rotate(${rotation}deg) scale(${scale})`, 
+                opacity: Math.abs(index - currentIndex) > 2 ? 0 : 1, // Show 3 cards max
+                zIndex: filteredCards.length - Math.abs(index - currentIndex), 
+                transition: isDragging ? 'none' : 'transform 0.3s ease-out, opacity 0.3s ease-out',
+                top: '50%',
+                left: '50%',
+                marginTop: '-200px',
+                marginLeft: '-200px'
+              }}
+              // Only top card is interactive
+              onMouseDown={isTopCard ? handleDragStart : undefined}
+              onMouseMove={isTopCard ? handleDragMove : undefined}
+              onMouseUp={isTopCard ? handleDragEnd : undefined}
+              onTouchStart={isTopCard ? handleDragStart : undefined}
+              onTouchMove={isTopCard ? handleDragMove : undefined}
+              onTouchEnd={isTopCard ? handleDragEnd : undefined}
+            >
               <div className="relative">
-                {(card.type === 'caregiver') && <EnhancedParentCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} />}
+                {(card.type === 'caregiver') && <EnhancedParentCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} isTopCard={isTopCard} />}
                 
-                {(card.type === 'sales_hunter' || card.type === 'transactional_leader' || card.type === 'project_coordinator' || card.type === 'enterprise_innovator' || card.type === 'identity_manager') && <EnhancedBusinessCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} />}
+                {(card.type === 'sales_hunter' || card.type === 'transactional_leader' || card.type === 'project_coordinator' || card.type === 'enterprise_innovator' || card.type === 'identity_manager') && <EnhancedBusinessCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} isTopCard={isTopCard} />}
                 
-                {(card.type === 'deal_stacker' || card.type === 'status_seeker') && <EnhancedShoppingCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} />}
+                {(card.type === 'deal_stacker' || card.type === 'status_seeker') && <EnhancedShoppingCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} isTopCard={isTopCard} />}
 
-                {index === currentIndex && isHorizontal && Math.abs(dragOffset.x) > 50 && (
+                {isTopCard && isHorizontal && Math.abs(dragOffset.x) > 50 && (
                   <SwipeActionOverlay direction={dragOffset.x > 0 ? 'right' : 'left'} cardType={card.type} swipeDistance={dragOffset.x} />
                 )}
               </div>

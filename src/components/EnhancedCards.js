@@ -2,38 +2,48 @@ import React from 'react';
 import { FileText } from 'lucide-react';
 
 // Enhanced content-sized card with frosted glass effect
-const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, backgroundImage }) => {
+const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, backgroundImage, isTopCard = true }) => {
   return (
-    <div className="w-full max-w-md mx-auto p-4">
+    <div className="w-full max-w-md mx-auto">
       <div 
         className={`relative rounded-3xl overflow-hidden shadow-2xl transition-all duration-300 ${
           isSeen ? 'opacity-70' : ''
         }`}
         style={{
           background: backgroundImage 
-            ? `url(${backgroundImage})` 
+            ? backgroundImage
             : 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
-        {/* Frosted glass overlay with solid background */}
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+        {/* Frosted glass overlay - fully opaque for top card, diffused for background cards */}
+        <div className={`absolute inset-0 ${
+          isTopCard 
+            ? 'bg-black/80 backdrop-blur-lg' 
+            : 'bg-black/95 backdrop-blur-xl'
+        }`} />
         
-        {/* Content */}
-        <div className="relative p-6 backdrop-blur-xl bg-black/40 border border-white/30">
+        {/* Content - only interactive on top card */}
+        <div className={`relative p-6 backdrop-blur-xl ${
+          isTopCard 
+            ? 'bg-black/30 border border-white/40' 
+            : 'bg-black/60 border border-white/20'
+        } ${isTopCard ? 'cursor-pointer' : 'pointer-events-none'}`}>
           {/* Meta CTA with Change button */}
           <div className="bg-white/30 backdrop-blur-md rounded-xl p-3 mb-4 border border-white/40 shadow-lg">
             <div className="flex items-center justify-between">
               <div className="flex-1 text-center">
                 <div className="text-white text-sm font-bold">{card.metaCTA}</div>
               </div>
-              <button 
-                onClick={() => onCustomizeAction && onCustomizeAction(card)}
-                className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-2 py-1 rounded-lg text-xs font-bold border border-white/30 transition-all ml-2"
-              >
-                Change
-              </button>
+              {isTopCard && (
+                <button 
+                  onClick={() => onCustomizeAction && onCustomizeAction(card)}
+                  className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-2 py-1 rounded-lg text-xs font-bold border border-white/30 transition-all ml-2"
+                >
+                  Change
+                </button>
+              )}
             </div>
           </div>
 
@@ -45,7 +55,7 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
   );
 };
 
-export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeAction }) => {
+export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true }) => {
   const displayInfo = card.kid || card.sender || { name: 'User', initial: 'U' };
   
   return (
@@ -55,6 +65,7 @@ export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeActio
       onViewEmail={onViewEmail} 
       onCustomizeAction={onCustomizeAction}
       backgroundImage={card.aiBackground}
+      isTopCard={isTopCard}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
@@ -121,7 +132,7 @@ export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeActio
   );
 };
 
-export const EnhancedBusinessCard = ({ card, isSeen, onViewEmail, onCustomizeAction }) => {
+export const EnhancedBusinessCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true }) => {
   const displayInfo = card.company || card.sender || card.project || card.source || { name: 'Business', initials: 'B' };
   const showMetrics = card.value && card.probability && card.score;
   
@@ -132,6 +143,7 @@ export const EnhancedBusinessCard = ({ card, isSeen, onViewEmail, onCustomizeAct
       onViewEmail={onViewEmail} 
       onCustomizeAction={onCustomizeAction}
       backgroundImage={card.aiBackground}
+      isTopCard={isTopCard}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
@@ -215,7 +227,7 @@ export const EnhancedBusinessCard = ({ card, isSeen, onViewEmail, onCustomizeAct
   );
 };
 
-export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAction }) => {
+export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true }) => {
   const storeName = card.store || card.airline || card.service || 'Store';
   const showPricing = card.salePrice && card.originalPrice;
   
@@ -226,6 +238,7 @@ export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAct
       onViewEmail={onViewEmail} 
       onCustomizeAction={onCustomizeAction}
       backgroundImage={card.aiBackground}
+      isTopCard={isTopCard}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">

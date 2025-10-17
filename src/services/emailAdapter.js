@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getCoherentMockData } from './coherentEmailData';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
@@ -56,54 +57,9 @@ class EmailAdapter {
     }
   }
 
-  // Get full mock data (all archetypes)
+  // Get full mock data (all archetypes) - now using coherent story
   getFullMockData() {
-    // Import the full mock data from App.js generateInitialCards
-    const getTimeAgo = (daysAgo, hoursAgo = 0) => {
-      if (daysAgo === 0 && hoursAgo < 1) return 'Just now';
-      if (daysAgo === 0) return hoursAgo + 'h ago';
-      if (daysAgo === 1) return 'Yesterday';
-      if (daysAgo < 7) return daysAgo + 'd ago';
-      return Math.floor(daysAgo / 7) + 'w ago';
-    };
-
-    return [
-      // P1: Transactional Leader (3 emails)
-      { id: 'tl1', type: 'transactional_leader', state: 'unseen', priority: 'critical', hpa: 'Review & Approve', sender: { name: 'Finance Dept', initial: 'F' }, timeAgo: getTimeAgo(0, 1), title: 'Q4 Budget Approval Required', summary: 'Department budget requests need executive sign-off by EOD', metaCTA: 'Swipe Right: Quick Approve', dataSources: [{ subject: 'Budget Approval', from: 'finance@company.com', date: getTimeAgo(0, 1) }] },
-      { id: 'tl2', type: 'transactional_leader', state: 'unseen', priority: 'high', hpa: 'Auto-Route', sender: { name: 'HR Systems', initial: 'H' }, timeAgo: getTimeAgo(0, 3), title: 'New Hire Onboarding - Sarah Chen', summary: 'Final approval needed for new Engineering Manager start date', metaCTA: 'Swipe Right: Delegate to HR', dataSources: [{ subject: 'Onboarding Approval', from: 'hr@company.com', date: getTimeAgo(0, 3) }] },
-      { id: 'tl3', type: 'transactional_leader', state: 'unseen', priority: 'low', hpa: 'File for Reference', sender: { name: 'IT Updates', initial: 'I' }, timeAgo: getTimeAgo(2), title: 'Monthly Security Report', summary: 'Routine security metrics and system updates for your review', metaCTA: 'Swipe Left: File for Reference', dataSources: [{ subject: 'Security Report', from: 'security@company.com', date: getTimeAgo(2) }] },
-
-      // P2: Sales Hunter (3 emails)
-      { id: 'sh1', type: 'sales_hunter', state: 'unseen', priority: 'critical', hpa: 'Schedule Demo', company: { name: 'TechCorp Industries', initials: 'TC' }, industry: 'SaaS', timeAgo: getTimeAgo(0, 3), score: 95, value: '$85K', probability: 90, contact: { name: 'Sarah Chen', initials: 'SC', role: 'VP Operations' }, summary: 'Ready to schedule demo, budget approved, decision timeline confirmed', metaCTA: 'Swipe Right: Send Demo Times', dataSources: [{ subject: 'Ready to Move Forward', from: 'sarah.chen@techcorp.com', date: getTimeAgo(0, 3) }] },
-      { id: 'sh2', type: 'sales_hunter', state: 'unseen', priority: 'critical', hpa: 'Route to CRM', company: { name: 'DataFlow Systems', initials: 'DF' }, industry: 'Analytics', timeAgo: getTimeAgo(0, 5), score: 88, value: '$120K', probability: 85, contact: { name: 'James Wilson', initials: 'JW', role: 'CTO' }, summary: 'RFP due Friday - requesting proposal submission', metaCTA: 'Swipe Right: Route to CRM & Tag Urgent', dataSources: [{ subject: 'RFP Submission', from: 'j.wilson@dataflow.com', date: getTimeAgo(0, 5) }] },
-      { id: 'sh3', type: 'sales_hunter', state: 'unseen', priority: 'medium', hpa: 'Follow Up', company: { name: 'StartupCo', initials: 'SC' }, industry: 'Tech', timeAgo: getTimeAgo(1), score: 72, value: '$45K', probability: 60, contact: { name: 'Alex Kim', initials: 'AK', role: 'Founder' }, summary: 'Initial interest expressed, needs follow-up call', metaCTA: 'Swipe Right: Schedule Follow-Up', dataSources: [{ subject: 'Re: Demo Request', from: 'alex@startupco.io', date: getTimeAgo(1) }] },
-
-      // P3: Project Coordinator (2 emails)
-      { id: 'pc1', type: 'project_coordinator', state: 'unseen', priority: 'critical', hpa: 'Schedule Review', project: { name: 'Website Redesign', code: 'WR-2024' }, client: { name: 'Acme Corp', initials: 'AC' }, timeAgo: getTimeAgo(0, 2), title: 'Client Milestone Review - Due Friday', summary: 'Design mockups need approval before development phase begins', metaCTA: 'Swipe Right: Schedule Review', dataSources: [{ subject: 'Milestone Approval', from: 'client@acme.com', date: getTimeAgo(0, 2) }] },
-      { id: 'pc2', type: 'project_coordinator', state: 'unseen', priority: 'high', hpa: 'File by Project', project: { name: 'Mobile App Launch', code: 'MAL-2024' }, client: { name: 'Beta Users', initials: 'B' }, timeAgo: getTimeAgo(0, 4), title: 'Beta Testing Feedback Summary', summary: '47 users submitted feedback, 3 critical bugs identified', metaCTA: 'Swipe Left: Tag & File by Project', dataSources: [{ subject: 'Beta Feedback', from: 'testing@company.com', date: getTimeAgo(0, 4) }] },
-
-      // P4: Enterprise Innovator / Learning (2 emails)
-      { id: 'ei1', type: 'enterprise_innovator', state: 'unseen', priority: 'medium', hpa: 'Save for Later', source: { name: 'MIT Tech Review', initials: 'MT' }, timeAgo: getTimeAgo(1), title: 'AI Trends Report Q4 2024', summary: 'Comprehensive analysis of emerging AI technologies and market applications', metaCTA: 'Swipe Left: Save for Deep Read', dataSources: [{ subject: 'Industry Newsletter', from: 'newsletter@mittr.com', date: getTimeAgo(1) }] },
-      { id: 'ei2', type: 'enterprise_innovator', state: 'unseen', priority: 'high', hpa: 'Express Interest', source: { name: 'Innovation Labs', initials: 'IL' }, timeAgo: getTimeAgo(0, 6), title: 'Partnership Opportunity - Stanford Research', summary: 'Joint research proposal on next-gen ML applications', metaCTA: 'Swipe Right: Express Interest', dataSources: [{ subject: 'Partnership Inquiry', from: 'labs@stanford.edu', date: getTimeAgo(0, 6) }] },
-
-      // C1: Caregiver (3 emails)
-      { id: 'cc1', type: 'caregiver', state: 'unseen', priority: 'critical', hpa: 'Sign & Send', kid: { name: 'Sophie Martinez', initial: 'S', grade: '3rd Grade' }, timeAgo: getTimeAgo(0, 2), title: 'Field Trip Permission - Due Wednesday', summary: 'Museum visit Friday requires signed form by Wed 5 PM', metaCTA: 'Swipe Right: Quick Sign & Send', requiresSignature: true, formFields: [{ label: 'Student Name', autoFillValue: 'Sophie Martinez' }, { label: 'Parent/Guardian', autoFillValue: 'Parent Name' }, { label: 'Emergency Contact', autoFillValue: '(555) 123-4567' }], dataSources: [{ subject: 'Field Trip Permission', from: 'Mrs. Anderson', date: getTimeAgo(0, 2) }] },
-      { id: 'cc2', type: 'caregiver', state: 'unseen', priority: 'high', hpa: 'Acknowledge', kid: { name: 'Max Rodriguez', initial: 'M', grade: '6th Grade' }, timeAgo: getTimeAgo(0, 5), title: 'Assignment Past Due - Math Homework', summary: 'Homework from last week not submitted, submit by Friday for partial credit', metaCTA: 'Swipe Right: Acknowledge & Confirm', dataSources: [{ subject: 'Missing Assignment Alert', from: 'Mr. Thompson', date: getTimeAgo(0, 5) }] },
-      { id: 'cc3', type: 'caregiver', state: 'unseen', priority: 'low', hpa: 'Archive', kid: { name: 'Sophie Martinez', initial: 'S', grade: '3rd Grade' }, timeAgo: getTimeAgo(3), title: 'Weekly Newsletter', summary: 'School newsletter with upcoming events and general announcements', metaCTA: 'Swipe Left: Archive', dataSources: [{ subject: 'Weekly Newsletter', from: 'newsletter@school.edu', date: getTimeAgo(3) }] },
-
-      // C2: Deal Stacker (3 emails)
-      { id: 'ds1', type: 'deal_stacker', state: 'unseen', priority: 'high', hpa: 'Claim Deal', store: 'TechMart', timeAgo: getTimeAgo(0, 1), title: 'Flash Sale: Premium Headphones', productImage: 'Headphones', originalPrice: 299.99, salePrice: 149.99, discount: 50, urgent: true, expiresIn: '6 hours', metaCTA: 'Swipe Right: Claim Deal Now', promoCode: 'AUDIO50', features: ['50% off', 'Free shipping'], dataSources: [{ subject: 'FLASH SALE', from: 'deals@techmart.com', date: getTimeAgo(0, 1) }] },
-      { id: 'ds2', type: 'deal_stacker', state: 'unseen', priority: 'low', hpa: 'Not Interested', store: 'FashionHub', timeAgo: getTimeAgo(1), title: 'Extra 30% Off Fall Collection', productImage: 'Apparel', originalPrice: 120.00, salePrice: 59.99, discount: 50, urgent: false, expiresIn: '3 days', metaCTA: 'Swipe Left: Dismiss', features: ['Stacks with sale', 'Free shipping $50+'], dataSources: [{ subject: 'Fall Sale', from: 'style@fashionhub.com', date: getTimeAgo(1) }] },
-      { id: 'ds3', type: 'deal_stacker', state: 'unseen', priority: 'medium', hpa: 'Compare Prices', store: 'ElectroWorld', timeAgo: getTimeAgo(0, 8), title: 'Limited Time: 4K Monitor Deal', productImage: 'Monitor', originalPrice: 899.99, salePrice: 549.99, discount: 39, urgent: false, expiresIn: '2 days', metaCTA: 'Swipe Right: Compare & Buy', dataSources: [{ subject: 'Monitor Deal Alert', from: 'deals@electroworld.com', date: getTimeAgo(0, 8) }] },
-
-      // C3: Status Seeker (2 emails)
-      { id: 'ss1', type: 'status_seeker', state: 'unseen', priority: 'critical', hpa: 'Check In Now', airline: 'United Airlines', timeAgo: getTimeAgo(0, 1), title: 'Flight Check-in Available - SFO to NYC', summary: 'Check in now for tomorrow\'s 6:45 AM departure, upgrade available', metaCTA: 'Swipe Right: Check In & Upgrade', flightDetails: { number: 'UA 1234', from: 'SFO', to: 'JFK', date: 'Tomorrow 6:45 AM' }, dataSources: [{ subject: 'Check-in Available', from: 'united@airlines.com', date: getTimeAgo(0, 1) }] },
-      { id: 'ss2', type: 'status_seeker', state: 'unseen', priority: 'high', hpa: 'Enroll Now', airline: 'Marriott Bonvoy', timeAgo: getTimeAgo(0, 3), title: 'Elite Status Challenge Opportunity', summary: 'Fast-track to Platinum status with 10 qualifying stays', metaCTA: 'Swipe Right: Enroll Now', dataSources: [{ subject: 'Status Challenge', from: 'bonvoy@marriott.com', date: getTimeAgo(0, 3) }] },
-
-      // C4: Identity Manager (2 emails)
-      { id: 'idm1', type: 'identity_manager', state: 'unseen', priority: 'critical', hpa: 'Verify Identity', service: 'Amazon', timeAgo: getTimeAgo(0, 0), title: 'Password Reset Request', summary: 'Someone requested a password reset for your account', metaCTA: 'Swipe Right: Verify Identity', security: true, expiresIn: '15 minutes', dataSources: [{ subject: 'Password Reset', from: 'security@amazon.com', date: getTimeAgo(0, 0) }] },
-      { id: 'idm2', type: 'identity_manager', state: 'unseen', priority: 'high', hpa: 'Confirm or Deny', service: 'PayPal', timeAgo: getTimeAgo(0, 2), title: 'New Device Login Detected', summary: 'Login from iPhone in San Francisco, CA', metaCTA: 'Swipe Right: Confirm or Deny', security: true, dataSources: [{ subject: 'Security Alert', from: 'security@paypal.com', date: getTimeAgo(0, 2) }] }
-    ];
+    return getCoherentMockData();
   }
 
   // Transform backend email format to SwipeFeed format
