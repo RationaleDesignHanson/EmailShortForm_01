@@ -849,8 +849,26 @@ const App = () => {
     );
   }
 
-  // Inbox Zero state
-  if (filteredCards.length === 0) {
+  // Render different app states FIRST (before any content checks)
+  if (appState === 'splash') {
+    return <SplashScreen onEnter={handleSplashComplete} />;
+  }
+
+  if (appState === 'onboarding') {
+    return <OnboardingTutorial onComplete={handleOnboardingComplete} />;
+  }
+
+  if (appState === 'celebration') {
+    return (
+      <CelebrationScreen 
+        archetype={activeType} 
+        onContinue={handleCelebrationContinue} 
+      />
+    );
+  }
+
+  // Inbox Zero state (only show when in feed mode and actually have processed cards)
+  if (filteredCards.length === 0 && cards.length > 0 && appState === 'feed') {
     return (
       <div className="w-full h-screen bg-slate-950 flex items-center justify-center">
         <div className="text-center">
@@ -867,24 +885,6 @@ const App = () => {
           </div>
         </div>
       </div>
-    );
-  }
-
-  // Render different app states
-  if (appState === 'splash') {
-    return <SplashScreen onEnter={handleSplashComplete} />;
-  }
-
-  if (appState === 'onboarding') {
-    return <OnboardingTutorial onComplete={handleOnboardingComplete} />;
-  }
-
-  if (appState === 'celebration') {
-    return (
-      <CelebrationScreen 
-        archetype={activeType} 
-        onContinue={handleCelebrationContinue} 
-      />
     );
   }
 
