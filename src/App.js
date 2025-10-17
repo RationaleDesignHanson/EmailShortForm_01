@@ -566,17 +566,25 @@ const App = () => {
     }
   }, [filteredCards.length, cards.length, activeType, completedArchetypes, appState]);
 
-  // Generate app background based on current archetype
+  // Generate app background based on current card content and archetype
   useEffect(() => {
     const generateAppBackground = async () => {
-      const bg = await imageGenerator.generateBackground({ type: activeType, priority: 'medium', id: 'app-bg' });
-      setAppBackground(bg);
+      const currentCard = filteredCards[currentIndex];
+      if (currentCard) {
+        // Use the actual card data to generate contextual background
+        const bg = await imageGenerator.generateBackground(currentCard);
+        setAppBackground(bg);
+      } else {
+        // Fallback to archetype-based background if no card
+        const bg = await imageGenerator.generateBackground({ type: activeType, priority: 'medium', id: 'app-bg' });
+        setAppBackground(bg);
+      }
     };
     
     if (appState === 'feed') {
       generateAppBackground();
     }
-  }, [activeType, appState]);
+  }, [activeType, appState, currentIndex, filteredCards]);
 
   useEffect(() => {
     if (view === 'feed' && filteredCards[currentIndex]) {
