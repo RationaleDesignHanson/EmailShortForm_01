@@ -927,16 +927,18 @@ const App = () => {
 
       <div className="relative w-full h-full flex items-center justify-center">
         {filteredCards.map((card, index) => {
-          const offset = (index - currentIndex) * 15; // Subtle offset for stacking
+          const offset = (index - currentIndex) * 8; // Tighter stacking
           const adjustedOffsetY = offset + (isDragging && index === currentIndex ? (dragOffset.y / window.innerHeight) * 100 : 0);
           const adjustedOffsetX = isDragging && index === currentIndex ? dragOffset.x : 0;
           const isHorizontal = Math.abs(dragOffset.x) > Math.abs(dragOffset.y);
-          const rotation = isDragging && index === currentIndex ? (dragOffset.x / 30) : 0;
           
-          // Background cards are slightly larger and scattered for deck effect
+          // Orderly stack with slight misalignment
           const isTopCard = index === currentIndex;
-          const scale = isTopCard ? 1 : 1.05 + (Math.abs(index - currentIndex) * 0.02); // Background cards 5-7% larger
-          const scatter = !isTopCard ? (index % 2 === 0 ? 8 : -8) : 0; // Alternate left/right scatter
+          const rotation = isDragging && index === currentIndex 
+            ? (dragOffset.x / 30) 
+            : (!isTopCard ? (index % 3 === 0 ? -2 : index % 3 === 1 ? 1.5 : -1) : 0); // 2-3 degree variations
+          const scale = isTopCard ? 1 : 1.03; // Background cards slightly larger (edges peek out)
+          const scatter = !isTopCard ? (index % 2 === 0 ? 3 : -3) : 0; // Subtle horizontal shift
           
           // Calculate reveal progress for next card (0 to 0.8)
           const swipeProgress = isDragging && isTopCard ? Math.min(Math.abs(dragOffset.x) / 300, 1) : 0;
