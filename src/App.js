@@ -515,6 +515,7 @@ const App = () => {
   const [skipTracker, setSkipTracker] = useState({}); // Track skips by sender domain
   const [completedArchetypes, setCompletedArchetypes] = useState([]);
   const [interactionCount, setInteractionCount] = useState(0);
+  const [appBackground, setAppBackground] = useState('linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)');
 
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
   const filteredCards = cards.filter(c => c.type === activeType && c.state !== 'dismissed' && c.state !== 'deleted' && c.state !== 'archived');
@@ -564,6 +565,18 @@ const App = () => {
       }
     }
   }, [filteredCards.length, cards.length, activeType, completedArchetypes, appState]);
+
+  // Generate app background based on current archetype
+  useEffect(() => {
+    const generateAppBackground = async () => {
+      const bg = await imageGenerator.generateBackground({ type: activeType, priority: 'medium', id: 'app-bg' });
+      setAppBackground(bg);
+    };
+    
+    if (appState === 'feed') {
+      generateAppBackground();
+    }
+  }, [activeType, appState]);
 
   useEffect(() => {
     if (view === 'feed' && filteredCards[currentIndex]) {
@@ -894,7 +907,16 @@ const App = () => {
 
   // Main swipe feed
   return (
-    <div className="w-full h-screen bg-slate-950">
+    <div 
+      className="w-full h-screen relative overflow-hidden"
+      style={{
+        background: appBackground,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      {/* Dark overlay for better card visibility */}
+      <div className="absolute inset-0 bg-black/40" />
 
       {/* Global Progress Counter */}
       <ProgressCounter 
@@ -925,7 +947,7 @@ const App = () => {
         </div>
       )}
 
-      <div className="relative w-full h-full flex items-center justify-center">
+      <div className="relative w-full h-full flex items-center justify-center z-10">
         {filteredCards.map((card, index) => {
           const offset = (index - currentIndex) * 8; // Tighter stacking
           const adjustedOffsetY = offset + (isDragging && index === currentIndex ? (dragOffset.y / window.innerHeight) * 100 : 0);
