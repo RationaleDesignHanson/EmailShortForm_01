@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, X, Send, Heart } from 'lucide-react';
+import { Check, X, Send, Heart, Clock } from 'lucide-react';
 
 export const SwipeActionOverlay = ({ direction, cardType, swipeDistance }) => {
   const isLongSwipe = Math.abs(swipeDistance) > 200;
@@ -19,7 +19,7 @@ export const SwipeActionOverlay = ({ direction, cardType, swipeDistance }) => {
         long: { icon: Send, label: '⚡ Action', color: 'bg-green-600', bgColor: 'bg-green-600/30' }
       },
       left: {
-        short: { icon: Check, label: '✓ Done', color: 'bg-slate-500', bgColor: 'bg-slate-500/20' },
+        short: { icon: Clock, label: '💤 Snooze', color: 'bg-purple-500', bgColor: 'bg-purple-500/20' },
         long: { icon: X, label: '✕ Skip', color: 'bg-red-600', bgColor: 'bg-red-600/30' }
       }
     },
@@ -29,7 +29,7 @@ export const SwipeActionOverlay = ({ direction, cardType, swipeDistance }) => {
         long: { icon: Send, label: '⚡ Action', color: 'bg-green-600', bgColor: 'bg-green-600/30' }
       },
       left: {
-        short: { icon: Check, label: '✓ Done', color: 'bg-slate-500', bgColor: 'bg-slate-500/20' },
+        short: { icon: Clock, label: '💤 Snooze', color: 'bg-purple-500', bgColor: 'bg-purple-500/20' },
         long: { icon: X, label: '✕ Skip', color: 'bg-red-600', bgColor: 'bg-red-600/30' }
       }
     },
@@ -39,7 +39,7 @@ export const SwipeActionOverlay = ({ direction, cardType, swipeDistance }) => {
         long: { icon: Heart, label: '⚡ Action', color: 'bg-pink-600', bgColor: 'bg-pink-600/30' }
       },
       left: {
-        short: { icon: Check, label: '✓ Done', color: 'bg-slate-500', bgColor: 'bg-slate-500/20' },
+        short: { icon: Clock, label: '💤 Snooze', color: 'bg-purple-500', bgColor: 'bg-purple-500/20' },
         long: { icon: X, label: '✕ Skip', color: 'bg-red-600', bgColor: 'bg-red-600/30' }
       }
     }

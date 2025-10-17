@@ -13,6 +13,7 @@ import { CelebrationScreen } from './components/CelebrationScreen';
 import { SplashScreen } from './components/SplashScreen';
 import { OnboardingTutorial } from './components/OnboardingTutorial';
 import { SplayView } from './components/SplayView';
+import { SnoozePickerModal } from './components/SnoozePickerModal';
 import emailAdapter from './services/emailAdapter';
 
 // Priority Meter Component (liquid glass style)
@@ -519,6 +520,8 @@ const App = () => {
   const [appBackground, setAppBackground] = useState('linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)');
   const [showSplayView, setShowSplayView] = useState(false);
   const [splayFilter, setSplayFilter] = useState(null);
+  const [showSnoozePicker, setShowSnoozePicker] = useState(false);
+  const [snoozeDuration, setSnoozeDuration] = useState(1); // Default 1 hour
 
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
   
@@ -652,8 +655,12 @@ const App = () => {
         actionLabel = '👁️ Marked as Read';
       }
     } else if (direction === 'left') {
-      // Track skips for unsubscribe detection
-      if (!isLong) {
+      if (isLong) {
+        // Long left = Skip/Dismiss
+        newState = 'dismissed';
+        actionLabel = '✕ Dismissed';
+        
+        // Track skips for unsubscribe detection
         const senderDomain = extractDomain(card.dataSources[0]?.from || '');
         if (senderDomain) {
           const newSkipCount = (skipTracker[senderDomain] || 0) + 1;
@@ -666,14 +673,11 @@ const App = () => {
             return;
           }
         }
-      }
-
-      if (isLong) {
-        newState = 'dismissed';
-        actionLabel = '✕ Dismissed';
       } else {
-        newState = 'processed';
-        actionLabel = '✓ Processed';
+        // Short left = Snooze (show picker modal)
+        setCurrentCard(card);
+        setShowSnoozePicker(true);
+        return;
       }
     }
 
@@ -776,6 +780,31 @@ const App = () => {
     moveToNext();
   };
 
+  const handleSnooze = (hours, remember) => {
+    if (currentCard) {
+      const snoozeUntil = new Date(Date.now() + hours * 60 * 60 * 1000);
+      setCards(prev => prev.map(c => 
+        c.id === currentCard.id ? { ...c, state: 'snoozed', snoozeUntil } : c
+      ));
+      
+      if (remember) {
+        setSnoozeDuration(hours);
+      }
+      
+      setLastAction({
+        cardId: currentCard.id,
+        previousState: currentCard.state,
+        action: `💤 Snoozed for ${hours < 1 ? hours * 60 + ' min' : hours + 'h'}`
+      });
+      
+      setShowUndo(true);
+      setTimeout(() => setShowUndo(false), 3000);
+    }
+    setShowSnoozePicker(false);
+    setCurrentCard(null);
+    moveToNext();
+  };
+
   const handleDragStart = (e) => {
     const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
     const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
@@ -807,10 +836,18 @@ const App = () => {
       }
     }
     
-    // Haptic feedback at short swipe threshold
+    // Enhanced 2-level haptic feedback
+    // Level 1: Soft swipe threshold (100px) - Light haptic
     if (absOffsetX > 100 && prevAbsOffsetX <= 100) {
       if (navigator.vibrate) {
-        navigator.vibrate(5);
+        navigator.vibrate(8); // Light vibration for soft swipe
+      }
+    }
+    
+    // Level 2: Hard swipe threshold (200px) - Strong haptic
+    if (absOffsetX > 200 && prevAbsOffsetX <= 200) {
+      if (navigator.vibrate) {
+        navigator.vibrate([20, 10, 20]); // Strong pattern for hard swipe
       }
     }
 
@@ -981,6 +1018,7 @@ const App = () => {
       {showFullEmail && currentCard && <FullEmailView email={currentCard} onClose={() => { setShowFullEmail(false); setCurrentCard(null); }} onReply={() => { setShowFullEmail(false); setShowComposer(true); }} onArchive={() => { setShowFullEmail(false); handleSwipeAction('left', false); }} onDelete={() => { setShowFullEmail(false); handleSwipeAction('left', true); }} />}
       {showActionCustomizer && currentCard && <ActionCustomizer email={currentCard} currentAction={currentCard.hpa} onSave={handleSaveAction} onCancel={() => { setShowActionCustomizer(false); setCurrentCard(null); }} />}
       {showSaveLater && currentCard && <SaveLaterModal email={currentCard} onSave={handleSaveLater} onCancel={() => { setShowSaveLater(false); setCurrentCard(null); }} />}
+      {showSnoozePicker && currentCard && <SnoozePickerModal email={currentCard} defaultHours={snoozeDuration} onSave={handleSnooze} onCancel={() => { setShowSnoozePicker(false); setCurrentCard(null); }} />}
       {showUnsubscribe && currentCard && <UnsubscribeModal senderInfo={{ domain: currentCard.senderDomain, email: currentCard.dataSources[0]?.from }} skipCount={currentCard.skipCount} onUnsubscribe={() => { setShowUnsubscribe(false); setCurrentCard(null); }} onHide={() => { setShowUnsubscribe(false); setCurrentCard(null); }} onKeep={() => { setShowUnsubscribe(false); setCurrentCard(null); }} onCancel={() => { setShowUnsubscribe(false); setCurrentCard(null); }} />}
 
       {showUndo && lastAction && (
