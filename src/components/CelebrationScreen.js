@@ -40,7 +40,7 @@ export const CelebrationScreen = ({ archetype, onContinue }) => {
 
   const archetypeConfig = {
     caregiver: {
-      title: 'Family Inbox Cleared!',
+      title: 'Family Emails Cleared!',
       subtitle: 'All school and family matters handled',
       icon: '👨‍👩‍👧‍👦',
       color: 'from-yellow-400 to-orange-500'

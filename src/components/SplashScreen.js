@@ -45,10 +45,12 @@ export const SplashScreen = ({ onEnter }) => {
 
       {/* Main Content */}
       <div className="relative z-10 text-center max-w-md mx-auto p-8">
-        {/* Logo */}
+        {/* Zero Logo - 10000 with middle 0 active */}
         <div className="mb-8">
-          <div className="w-24 h-24 mx-auto bg-gradient-to-br from-blue-400 to-purple-500 rounded-3xl flex items-center justify-center shadow-2xl transform hover:scale-105 transition-all duration-300">
-            <Mail className="text-white" size={48} />
+          <div className="flex items-center justify-center text-7xl font-bold">
+            <span className="text-white/30">10</span>
+            <span className="text-white bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl px-3 py-1 shadow-2xl transform hover:scale-110 transition-all duration-300">0</span>
+            <span className="text-white/30">00</span>
           </div>
         </div>
 
@@ -61,7 +63,7 @@ export const SplashScreen = ({ onEnter }) => {
 
         {/* Subtitle */}
         <p className="text-xl text-white/80 mb-8 leading-relaxed">
-          Clear your inbox fast. Swipe to keep, act, or save for later.
+          Clear your inbox fast. Swipe to keep, act, or archive for later.
         </p>
 
         {/* Demo Badge */}
@@ -117,10 +119,6 @@ export const SplashScreen = ({ onEnter }) => {
           </button>
         </form>
 
-        {/* Hint */}
-        <div className="mt-6 text-white/50 text-sm">
-          💡 Hint: The password is six ones
-        </div>
 
         {/* Features Preview */}
         <div className="mt-8 grid grid-cols-2 gap-4 text-xs text-white/60">

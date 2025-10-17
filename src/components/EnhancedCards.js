@@ -160,8 +160,8 @@ export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeActio
 
       {/* Content */}
       <div className="space-y-3">
-        <h3 className="text-white text-xl font-bold drop-shadow-lg">{card.title}</h3>
-        <p className="text-white/90 text-base leading-relaxed drop-shadow-md">{card.summary}</p>
+        <h3 className="text-white text-xl font-bold" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.8)' }}>{card.title}</h3>
+        <p className="text-white/95 text-base leading-relaxed" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.8)' }}>{card.summary}</p>
 
         {card.requiresSignature && (
           <div className="bg-white/20 backdrop-blur-md rounded-xl p-3 flex items-center gap-3 border border-white/30">

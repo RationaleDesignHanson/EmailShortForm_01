@@ -30,7 +30,7 @@ export const BottomSheet = ({
     sales_hunter: { title: 'Job (Sales)', subtitle: 'Sales Pipeline', icon: TrendingUp, gradient: 'from-slate-900 via-blue-900 to-indigo-900' },
     project_coordinator: { title: 'Project Hub', subtitle: 'Project Coordinator', icon: Calendar, gradient: 'from-teal-700 via-cyan-700 to-blue-800' },
     enterprise_innovator: { title: 'Learning Feed', subtitle: 'Learning', icon: Sparkles, gradient: 'from-purple-800 via-violet-800 to-indigo-900' },
-    caregiver: { title: 'Family Inbox', subtitle: 'Time-Crunched Caregiver', icon: Baby, gradient: 'from-indigo-600 via-purple-600 to-pink-600' },
+    caregiver: { title: 'Family', subtitle: 'Time-Crunched Caregiver', icon: Baby, gradient: 'from-indigo-600 via-purple-600 to-pink-600' },
     deal_stacker: { title: 'Deals Inbox', subtitle: 'Savvy Deal Stacker', icon: ShoppingBag, gradient: 'from-emerald-600 via-teal-600 to-cyan-600' },
     status_seeker: { title: 'Travel Hub', subtitle: 'Global Status Seeker', icon: Award, gradient: 'from-amber-600 via-orange-600 to-red-600' },
     identity_manager: { title: 'Security Center', subtitle: 'Digital Identity Manager', icon: AlertTriangle, gradient: 'from-red-700 via-rose-700 to-pink-700' }

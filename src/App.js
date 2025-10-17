@@ -12,6 +12,7 @@ import { ProgressCounter } from './components/ProgressCounter';
 import { CelebrationScreen } from './components/CelebrationScreen';
 import { SplashScreen } from './components/SplashScreen';
 import { OnboardingTutorial } from './components/OnboardingTutorial';
+import { SplayView } from './components/SplayView';
 import emailAdapter from './services/emailAdapter';
 
 // Priority Meter Component (liquid glass style)
@@ -427,7 +428,7 @@ const Dashboard = ({ type, cards, onViewFeed }) => {
     sales_hunter: { title: 'Job (Sales)', subtitle: 'Sales Pipeline', icon: TrendingUp, gradient: 'from-slate-900 via-blue-900 to-indigo-900' },
     project_coordinator: { title: 'Project Hub', subtitle: 'Project Coordinator', icon: Calendar, gradient: 'from-teal-700 via-cyan-700 to-blue-800' },
     enterprise_innovator: { title: 'Learning Feed', subtitle: 'Learning', icon: Sparkles, gradient: 'from-purple-800 via-violet-800 to-indigo-900' },
-    caregiver: { title: 'Family Inbox', subtitle: 'Time-Crunched Caregiver', icon: Baby, gradient: 'from-indigo-600 via-purple-600 to-pink-600' },
+    caregiver: { title: 'Family', subtitle: 'Time-Crunched Caregiver', icon: Baby, gradient: 'from-indigo-600 via-purple-600 to-pink-600' },
     deal_stacker: { title: 'Deals Inbox', subtitle: 'Savvy Deal Stacker', icon: ShoppingBag, gradient: 'from-emerald-600 via-teal-600 to-cyan-600' },
     status_seeker: { title: 'Travel Hub', subtitle: 'Global Status Seeker', icon: Award, gradient: 'from-amber-600 via-orange-600 to-red-600' },
     identity_manager: { title: 'Security Center', subtitle: 'Digital Identity Manager', icon: AlertTriangle, gradient: 'from-red-700 via-rose-700 to-pink-700' }
@@ -516,9 +517,16 @@ const App = () => {
   const [completedArchetypes, setCompletedArchetypes] = useState([]);
   const [interactionCount, setInteractionCount] = useState(0);
   const [appBackground, setAppBackground] = useState('linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)');
+  const [showSplayView, setShowSplayView] = useState(false);
+  const [splayFilter, setSplayFilter] = useState(null);
 
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
-  const filteredCards = cards.filter(c => c.type === activeType && c.state !== 'dismissed' && c.state !== 'deleted' && c.state !== 'archived');
+  
+  // Apply splay filter if active
+  let filteredCards = cards.filter(c => c.type === activeType && c.state !== 'dismissed' && c.state !== 'deleted' && c.state !== 'archived');
+  if (splayFilter) {
+    filteredCards = filteredCards.filter(splayFilter.filter);
+  }
 
   // Archetype configs for naming
   const configs = {
@@ -526,7 +534,7 @@ const App = () => {
     sales_hunter: { title: 'Job (Sales)' },
     project_coordinator: { title: 'Project Hub' },
     enterprise_innovator: { title: 'Learning Feed' },
-    caregiver: { title: 'Family Inbox' },
+    caregiver: { title: 'Family' },
     deal_stacker: { title: 'Deals Inbox' },
     status_seeker: { title: 'Travel Hub' },
     identity_manager: { title: 'Security Center' }
@@ -566,18 +574,18 @@ const App = () => {
     }
   }, [filteredCards.length, cards.length, activeType, completedArchetypes, appState]);
 
-  // Generate app background based on current card content and archetype
+  // Generate photographic app background based on current card content
   useEffect(() => {
     const generateAppBackground = async () => {
       const currentCard = filteredCards[currentIndex];
       if (currentCard) {
-        // Use the actual card data to generate contextual background
-        const bg = await imageGenerator.generateBackground(currentCard);
-        setAppBackground(bg);
+        // Generate photographic scene related to card content
+        const photoUrl = await imageGenerator.generatePhotographicBackground(currentCard);
+        setAppBackground(`url(${photoUrl})`);
       } else {
-        // Fallback to archetype-based background if no card
-        const bg = await imageGenerator.generateBackground({ type: activeType, priority: 'medium', id: 'app-bg' });
-        setAppBackground(bg);
+        // Fallback to archetype scene if no card
+        const photoUrl = await imageGenerator.generatePhotographicBackground({ type: activeType, priority: 'medium', id: 'app-bg' });
+        setAppBackground(`url(${photoUrl})`);
       }
     };
     
@@ -729,6 +737,22 @@ const App = () => {
     setActiveType(archetypes[nextIndex]);
     setCurrentIndex(0);
     setAppState('feed');
+  };
+
+  // Splay View Handlers
+  const handleOpenSplayView = () => {
+    setShowSplayView(true);
+  };
+
+  const handleCloseSplayView = () => {
+    setShowSplayView(false);
+    setSplayFilter(null);
+  };
+
+  const handleSelectSplayGroup = (group) => {
+    setSplayFilter(group);
+    setShowSplayView(false);
+    setCurrentIndex(0);
   };
 
   const handleSaveAction = (newAction) => {
@@ -888,6 +912,18 @@ const App = () => {
     );
   }
 
+  // Show splay view when user taps progress counter (to organize by sub-categories)
+  if (showSplayView) {
+    return (
+      <SplayView 
+        archetype={activeType}
+        cards={cards.filter(c => c.type === activeType && c.state !== 'dismissed' && c.state !== 'deleted' && c.state !== 'archived')}
+        onSelectGroup={handleSelectSplayGroup}
+        onBack={handleCloseSplayView}
+      />
+    );
+  }
+
   // Inbox Zero state (only show when in feed mode and actually have processed cards)
   if (filteredCards.length === 0 && cards.length > 0 && appState === 'feed') {
     return (
@@ -931,8 +967,8 @@ const App = () => {
         totalEmails={totalEmails} 
         processedEmails={processedEmails} 
         currentArchetype={activeType}
-        archetypeName={configs[activeType]?.title || 'Unknown'}
-        onOpenBottomSheet={() => setShowBottomSheet(true)}
+        archetypeName={splayFilter ? splayFilter.name : (configs[activeType]?.title || 'Unknown')}
+        onOpenBottomSheet={handleOpenSplayView}
         onPrevArchetype={() => switchArchetype('prev')}
         onNextArchetype={() => switchArchetype('next')}
       />
