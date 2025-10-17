@@ -17,7 +17,7 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
           backgroundPosition: 'center',
         }}
       >
-        {/* iOS-style frosted glass with specular highlights */}
+        {/* iOS-style frosted glass with specular highlights and progressive reveal */}
         <div 
           className={`absolute inset-0 ${
             isTopCard 
@@ -27,7 +27,7 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
           style={{
             backgroundColor: isTopCard 
               ? 'rgba(255, 255, 255, 0.15)' 
-              : 'rgba(0, 0, 0, 0.85)',
+              : `rgba(0, 0, 0, ${0.50 - (revealProgress * 0.3)})`,  // 0.50 to 0.20 as swipe progresses
             backdropFilter: isTopCard ? 'blur(40px) saturate(180%)' : 'blur(60px) saturate(120%)',
             WebkitBackdropFilter: isTopCard ? 'blur(40px) saturate(180%)' : 'blur(60px) saturate(120%)',
           }}
@@ -54,11 +54,12 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
           />
         )}
         
-        {/* Content - progressively reveal as top card swipes away */}
+        {/* Content - progressively reveal as top card swipes away (0 to 0.8) */}
         <div 
-          className={`relative p-6 transition-opacity duration-100 ${isTopCard ? 'cursor-pointer' : 'pointer-events-none'}`}
+          className={`relative p-6 ${isTopCard ? 'cursor-pointer' : 'pointer-events-none'}`}
           style={{
-            opacity: isTopCard ? 1 : revealProgress
+            opacity: isTopCard ? 1 : Math.min(revealProgress, 0.8),
+            transition: 'opacity 0.1s ease-out'
           }}
         >
           {/* Meta CTA with Change button */}

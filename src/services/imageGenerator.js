@@ -65,10 +65,6 @@ class ImageGenerator {
 
   // Enhanced gradients with more sophistication
   getEnhancedBackground(archetype, priority) {
-    const priorityOverlay = priority === 'critical' ? 'rgba(239, 68, 68, 0.1)' : 
-                           priority === 'high' ? 'rgba(249, 115, 22, 0.1)' :
-                           priority === 'medium' ? 'rgba(234, 179, 8, 0.1)' : 'rgba(59, 130, 246, 0.1)';
-
     const baseGradients = {
       caregiver: 'linear-gradient(135deg, #667eea 0%, #764ba2 30%, #f093fb 70%, #f5576c 100%)',
       sales_hunter: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 30%, #43e97b 70%, #38f9d7 100%)',
@@ -80,7 +76,7 @@ class ImageGenerator {
       identity_manager: 'linear-gradient(135deg, #fdbb2d 0%, #22c1c3 30%, #667eea 70%, #764ba2 100%)'
     };
 
-    return `${baseGradients[archetype] || baseGradients.caregiver}, radial-gradient(circle at 30% 70%, ${priorityOverlay}, transparent)`;
+    return baseGradients[archetype] || baseGradients.caregiver;
   }
 
   // Fallback gradients for offline mode
