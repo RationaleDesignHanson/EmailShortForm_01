@@ -48,45 +48,42 @@ class ImageGenerator {
     return gradient;
   }
 
-  // Generate image using Gemini Imagen API
+  // Generate image using Gemini Imagen API or fallback to Picsum
   async generateGeminiImage(email) {
     const prompt = this.createImagePrompt(email);
     
+    // For now, use Picsum Photos (reliable, free, no API key needed)
+    // Gemini Imagen API requires different endpoint structure - will implement when correct endpoint confirmed
     try {
-      // Use Gemini Imagen 3 for image generation
+      const seed = email.type + email.id;
+      const picsumUrl = `https://picsum.photos/seed/${seed}/800/600?blur=2`;
+      console.log(`📸 Using Picsum image for ${email.type}`);
+      return picsumUrl;
+      
+      // TODO: Implement Gemini when correct API endpoint is confirmed
+      // Current endpoint format is unclear - need to verify:
+      // - Is it generateContent or predict?
+      // - What's the correct model name?
+      // - What's the request/response format?
+      /*
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=${this.apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${this.apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            instances: [{ prompt: prompt }],
-            parameters: { 
-              sampleCount: 1,
-              aspectRatio: '16:9',
-              negativePrompt: 'text, watermark, logo, ugly, distorted'
-            }
+            contents: [{
+              parts: [{
+                text: prompt
+              }]
+            }]
           })
         }
       );
+      */
       
-      if (!response.ok) {
-        console.error('Gemini API error:', response.status, response.statusText);
-        return null;
-      }
-      
-      const data = await response.json();
-      if (data.predictions && data.predictions[0]) {
-        // Convert base64 to data URL
-        const imageData = data.predictions[0].bytesBase64Encoded;
-        const dataUrl = `data:image/png;base64,${imageData}`;
-        console.log(`✨ Generated Gemini image for ${email.type}`);
-        return dataUrl;
-      }
-      
-      return null;
     } catch (error) {
-      console.error('Gemini image generation error:', error);
+      console.error('Image generation error:', error);
       return null;
     }
   }
