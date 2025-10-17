@@ -17,11 +17,11 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
           backgroundPosition: 'center',
         }}
       >
-        {/* Frosted glass overlay */}
-        <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" />
+        {/* Frosted glass overlay with solid background */}
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
         
         {/* Content */}
-        <div className="relative p-6 backdrop-blur-xl bg-white/10 border border-white/20">
+        <div className="relative p-6 backdrop-blur-xl bg-black/40 border border-white/30">
           {/* Meta CTA with Change button */}
           <div className="bg-white/30 backdrop-blur-md rounded-xl p-3 mb-4 border border-white/40 shadow-lg">
             <div className="flex items-center justify-between">

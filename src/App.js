@@ -871,23 +871,23 @@ const App = () => {
 
       <div className="relative w-full h-full flex items-center justify-center" onMouseDown={handleDragStart} onMouseMove={handleDragMove} onMouseUp={handleDragEnd} onTouchStart={handleDragStart} onTouchMove={handleDragMove} onTouchEnd={handleDragEnd}>
         {filteredCards.map((card, index) => {
-          const offset = (index - currentIndex) * 20; // Reduced offset for content-sized cards
+          const offset = (index - currentIndex) * 30; // Increased offset for better separation
           const adjustedOffsetY = offset + (isDragging && index === currentIndex ? (dragOffset.y / window.innerHeight) * 100 : 0);
           const adjustedOffsetX = isDragging && index === currentIndex ? dragOffset.x : 0;
           const isHorizontal = Math.abs(dragOffset.x) > Math.abs(dragOffset.y);
-          const rotation = isDragging && index === currentIndex ? (dragOffset.x / 30) : 0; // Reduced rotation
-          const scale = 1 - Math.abs(index - currentIndex) * 0.02; // Subtle scale difference
+          const rotation = isDragging && index === currentIndex ? (dragOffset.x / 30) : 0;
+          const scale = 1 - Math.abs(index - currentIndex) * 0.05; // More pronounced scale difference
           
           return (
             <div key={card.id} className="absolute" style={{ 
               transform: `translateY(${adjustedOffsetY}px) translateX(${adjustedOffsetX}px) rotate(${rotation}deg) scale(${scale})`, 
-              opacity: Math.abs(index - currentIndex) > 2 ? 0 : 1 - Math.abs(index - currentIndex) * 0.3, 
+              opacity: Math.abs(index - currentIndex) > 1 ? 0 : 1, // Hide cards beyond immediate next/prev
               zIndex: filteredCards.length - Math.abs(index - currentIndex), 
               transition: isDragging ? 'none' : 'transform 0.3s ease-out, opacity 0.3s ease-out',
               top: '50%',
               left: '50%',
-              marginTop: '-200px', // Approximate card height offset
-              marginLeft: '-200px' // Approximate card width offset
+              marginTop: '-200px',
+              marginLeft: '-200px'
             }}>
               <div className="relative">
                 {(card.type === 'caregiver') && <EnhancedParentCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} />}
