@@ -52,12 +52,13 @@ class ImageGenerator {
   async generateGeminiImage(email) {
     const prompt = this.createImagePrompt(email);
     
-    // For now, use Picsum Photos (reliable, free, no API key needed)
-    // Gemini Imagen API requires different endpoint structure - will implement when correct endpoint confirmed
+    // Use content-aware seed for Picsum to get more relevant images
+    // Seed based on email content creates unique images per email
     try {
-      const seed = email.type + email.id;
+      const contentKeywords = this.extractContentKeywords(email);
+      const seed = `${email.type}-${contentKeywords}-${email.priority}`;
       const picsumUrl = `https://picsum.photos/seed/${seed}/800/600?blur=2`;
-      console.log(`📸 Using Picsum image for ${email.type}`);
+      console.log(`📸 Using Picsum for ${email.type} - seed: ${seed}`);
       return picsumUrl;
       
       // TODO: Implement Gemini when correct API endpoint is confirmed
@@ -86,6 +87,39 @@ class ImageGenerator {
       console.error('Image generation error:', error);
       return null;
     }
+  }
+
+  // Extract content keywords for more relevant image seeds
+  extractContentKeywords(email) {
+    const title = (email.title || '').toLowerCase();
+    const summary = (email.summary || '').toLowerCase();
+    const combined = title + ' ' + summary;
+    
+    // Extract meaningful keywords from email content
+    if (combined.includes('field trip') || combined.includes('museum')) return 'fieldtrip-museum';
+    if (combined.includes('conference') || combined.includes('teacher')) return 'school-meeting';
+    if (combined.includes('birthday') || combined.includes('party')) return 'celebration-party';
+    if (combined.includes('newsletter')) return 'school-newsletter';
+    
+    if (combined.includes('contract') || combined.includes('deal')) return 'business-contract';
+    if (combined.includes('proposal') || combined.includes('rfp')) return 'business-proposal';
+    if (combined.includes('demo') || combined.includes('meeting')) return 'office-meeting';
+    
+    if (combined.includes('sale') || combined.includes('flash')) return 'shopping-sale';
+    if (combined.includes('camera') || combined.includes('photo')) return 'photography-gear';
+    if (combined.includes('kitchen') || combined.includes('cooking')) return 'kitchen-home';
+    
+    if (combined.includes('flight') || combined.includes('check-in')) return 'airport-travel';
+    if (combined.includes('hotel') || combined.includes('resort')) return 'hotel-luxury';
+    
+    if (combined.includes('security') || combined.includes('password')) return 'security-alert';
+    if (combined.includes('bank') || combined.includes('account')) return 'banking-finance';
+    
+    if (combined.includes('report') || combined.includes('research')) return 'research-study';
+    if (combined.includes('workshop') || combined.includes('course')) return 'learning-workshop';
+    
+    // Fallback to archetype-based seed
+    return email.type;
   }
 
   // Get Unsplash search keywords for each archetype
