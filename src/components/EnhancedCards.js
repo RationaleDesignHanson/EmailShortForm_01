@@ -1,7 +1,7 @@
 import React from 'react';
 import { FileText } from 'lucide-react';
 
-// Enhanced content-sized card with frosted glass effect
+// Enhanced content-sized card with liquid frosted glass effect
 const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, backgroundImage, isTopCard = true }) => {
   return (
     <div className="w-full max-w-md mx-auto">
@@ -17,29 +17,32 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
           backgroundPosition: 'center',
         }}
       >
-        {/* Frosted glass overlay - fully opaque for top card, diffused for background cards */}
+        {/* Liquid glass overlay - lighter to show gradient, heavier for background cards to occlude */}
         <div className={`absolute inset-0 ${
           isTopCard 
-            ? 'bg-black/80 backdrop-blur-lg' 
-            : 'bg-black/95 backdrop-blur-xl'
+            ? 'bg-white/10 backdrop-blur-2xl' 
+            : 'bg-white/5 backdrop-blur-3xl'
+        }`} />
+        
+        {/* Solid base layer to fully occlude cards beneath */}
+        <div className={`absolute inset-0 ${
+          isTopCard 
+            ? 'bg-gradient-to-br from-black/40 via-black/30 to-black/40' 
+            : 'bg-black/90'
         }`} />
         
         {/* Content - only interactive on top card */}
-        <div className={`relative p-6 backdrop-blur-xl ${
-          isTopCard 
-            ? 'bg-black/30 border border-white/40' 
-            : 'bg-black/60 border border-white/20'
-        } ${isTopCard ? 'cursor-pointer' : 'pointer-events-none'}`}>
+        <div className={`relative p-6 ${isTopCard ? 'cursor-pointer' : 'pointer-events-none'}`}>
           {/* Meta CTA with Change button */}
-          <div className="bg-white/30 backdrop-blur-md rounded-xl p-3 mb-4 border border-white/40 shadow-lg">
+          <div className="bg-white/20 backdrop-blur-xl rounded-xl p-3 mb-4 border border-white/30 shadow-lg">
             <div className="flex items-center justify-between">
               <div className="flex-1 text-center">
-                <div className="text-white text-sm font-bold">{card.metaCTA}</div>
+                <div className="text-white text-sm font-bold drop-shadow-lg">{card.metaCTA}</div>
               </div>
               {isTopCard && (
                 <button 
                   onClick={() => onCustomizeAction && onCustomizeAction(card)}
-                  className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-2 py-1 rounded-lg text-xs font-bold border border-white/30 transition-all ml-2"
+                  className="bg-white/25 backdrop-blur-sm hover:bg-white/35 text-white px-2 py-1 rounded-lg text-xs font-bold border border-white/40 transition-all ml-2 shadow-md"
                 >
                   Change
                 </button>
@@ -115,8 +118,8 @@ export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeActio
 
       {/* Content */}
       <div className="space-y-3">
-        <h3 className="text-white text-xl font-bold">{card.title}</h3>
-        <p className="text-white/90 text-base leading-relaxed">{card.summary}</p>
+        <h3 className="text-white text-xl font-bold drop-shadow-lg">{card.title}</h3>
+        <p className="text-white/90 text-base leading-relaxed drop-shadow-md">{card.summary}</p>
 
         {card.requiresSignature && (
           <div className="bg-white/20 backdrop-blur-md rounded-xl p-3 flex items-center gap-3 border border-white/30">
@@ -193,9 +196,9 @@ export const EnhancedBusinessCard = ({ card, isSeen, onViewEmail, onCustomizeAct
 
       {/* Content */}
       <div className="space-y-3">
-        <h3 className="text-white text-xl font-bold">{card.title || card.summary}</h3>
+        <h3 className="text-white text-xl font-bold drop-shadow-lg">{card.title || card.summary}</h3>
         {card.summary && card.title && (
-          <p className="text-white/90 text-base leading-relaxed">{card.summary}</p>
+          <p className="text-white/90 text-base leading-relaxed drop-shadow-md">{card.summary}</p>
         )}
         
         {showMetrics && (
@@ -281,9 +284,9 @@ export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAct
           </div>
         )}
 
-        <h2 className="text-white text-xl font-bold">{card.title}</h2>
+        <h2 className="text-white text-xl font-bold drop-shadow-lg">{card.title}</h2>
         {card.summary && (
-          <p className="text-white/90 text-base leading-relaxed">{card.summary}</p>
+          <p className="text-white/90 text-base leading-relaxed drop-shadow-md">{card.summary}</p>
         )}
 
         {showPricing && (
