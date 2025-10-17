@@ -1,7 +1,7 @@
 import React from 'react';
 import { FileText } from 'lucide-react';
 
-// Enhanced content-sized card with liquid frosted glass effect
+// Enhanced content-sized card with iOS-style frosted glass effect
 const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, backgroundImage, isTopCard = true }) => {
   return (
     <div className="w-full max-w-md mx-auto">
@@ -17,24 +17,33 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
           backgroundPosition: 'center',
         }}
       >
-        {/* Liquid glass overlay - lighter to show gradient, heavier for background cards to occlude */}
-        <div className={`absolute inset-0 ${
-          isTopCard 
-            ? 'bg-white/10 backdrop-blur-2xl' 
-            : 'bg-white/5 backdrop-blur-3xl'
-        }`} />
-        
-        {/* Solid base layer to fully occlude cards beneath */}
-        <div className={`absolute inset-0 ${
-          isTopCard 
-            ? 'bg-gradient-to-br from-black/40 via-black/30 to-black/40' 
-            : 'bg-black/90'
-        }`} />
+        {/* iOS-style frosted glass - heavily blurred background visible through translucent material */}
+        <div 
+          className={`absolute inset-0 ${
+            isTopCard 
+              ? 'backdrop-blur-3xl' 
+              : 'backdrop-blur-3xl'
+          }`}
+          style={{
+            backgroundColor: isTopCard 
+              ? 'rgba(255, 255, 255, 0.15)' 
+              : 'rgba(0, 0, 0, 0.85)',
+            backdropFilter: isTopCard ? 'blur(40px) saturate(180%)' : 'blur(60px) saturate(120%)',
+            WebkitBackdropFilter: isTopCard ? 'blur(40px) saturate(180%)' : 'blur(60px) saturate(120%)',
+          }}
+        />
         
         {/* Content - only interactive on top card */}
         <div className={`relative p-6 ${isTopCard ? 'cursor-pointer' : 'pointer-events-none'}`}>
           {/* Meta CTA with Change button */}
-          <div className="bg-white/20 backdrop-blur-xl rounded-xl p-3 mb-4 border border-white/30 shadow-lg">
+          <div 
+            className="rounded-xl p-3 mb-4 border border-white/30 shadow-lg"
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              backdropFilter: 'blur(20px) saturate(150%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(150%)',
+            }}
+          >
             <div className="flex items-center justify-between">
               <div className="flex-1 text-center">
                 <div className="text-white text-sm font-bold drop-shadow-lg">{card.metaCTA}</div>
@@ -42,7 +51,12 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
               {isTopCard && (
                 <button 
                   onClick={() => onCustomizeAction && onCustomizeAction(card)}
-                  className="bg-white/25 backdrop-blur-sm hover:bg-white/35 text-white px-2 py-1 rounded-lg text-xs font-bold border border-white/40 transition-all ml-2 shadow-md"
+                  className="text-white px-2 py-1 rounded-lg text-xs font-bold border border-white/40 transition-all ml-2 shadow-md hover:scale-105"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                  }}
                 >
                   Change
                 </button>
