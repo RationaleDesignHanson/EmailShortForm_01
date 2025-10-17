@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TrendingUp, Calendar, Star, ShoppingBag, Briefcase, Baby, X, CheckCircle, Award, Clock, Mail, Send, Sparkles, Paperclip, FileText, ExternalLink, Zap, AlertTriangle } from 'lucide-react';
-import { ParentCard, BusinessCard, ShoppingCard } from './components/Cards';
+import { EnhancedParentCard, EnhancedBusinessCard, EnhancedShoppingCard } from './components/EnhancedCards';
+import imageGenerator from './services/imageGenerator';
 import { SwipeActionOverlay } from './components/SwipeActionOverlay';
 import { BottomSheet } from './components/BottomSheet';
 import { FullEmailView } from './components/FullEmailView';
@@ -525,9 +526,23 @@ const App = () => {
   const SNAP_THRESHOLD = 200;
   const SNAP_ZONE = 20;
 
-  // Initialize with demo data
+  // Initialize with demo data and generate backgrounds
   useEffect(() => {
-    setCards(generateInitialCards());
+    const initializeCards = async () => {
+      const initialCards = generateInitialCards();
+      
+      // Generate AI backgrounds for each card
+      const cardsWithBackgrounds = await Promise.all(
+        initialCards.map(async (card) => {
+          const aiBackground = await imageGenerator.generateBackground(card);
+          return { ...card, aiBackground };
+        })
+      );
+      
+      setCards(cardsWithBackgrounds);
+    };
+
+    initializeCards();
   }, []);
 
   useEffect(() => {
@@ -854,33 +869,36 @@ const App = () => {
         </div>
       )}
 
-      <div className="relative w-full h-full" onMouseDown={handleDragStart} onMouseMove={handleDragMove} onMouseUp={handleDragEnd} onTouchStart={handleDragStart} onTouchMove={handleDragMove} onTouchEnd={handleDragEnd}>
+      <div className="relative w-full h-full flex items-center justify-center" onMouseDown={handleDragStart} onMouseMove={handleDragMove} onMouseUp={handleDragEnd} onTouchStart={handleDragStart} onTouchMove={handleDragMove} onTouchEnd={handleDragEnd}>
         {filteredCards.map((card, index) => {
-          const offset = (index - currentIndex) * 100;
-          const adjustedOffsetY = offset + (isDragging ? (dragOffset.y / window.innerHeight) * 100 : 0);
-          const adjustedOffsetX = isDragging ? dragOffset.x : 0;
+          const offset = (index - currentIndex) * 20; // Reduced offset for content-sized cards
+          const adjustedOffsetY = offset + (isDragging && index === currentIndex ? (dragOffset.y / window.innerHeight) * 100 : 0);
+          const adjustedOffsetX = isDragging && index === currentIndex ? dragOffset.x : 0;
           const isHorizontal = Math.abs(dragOffset.x) > Math.abs(dragOffset.y);
-          const rotation = isDragging && index === currentIndex ? (dragOffset.x / 20) : 0;
+          const rotation = isDragging && index === currentIndex ? (dragOffset.x / 30) : 0; // Reduced rotation
+          const scale = 1 - Math.abs(index - currentIndex) * 0.02; // Subtle scale difference
           
           return (
-            <div key={card.id} className="absolute inset-0" style={{ 
-              transform: 'translateY(' + adjustedOffsetY + '%) translateX(' + adjustedOffsetX + 'px) rotate(' + rotation + 'deg) scale(' + (1 - Math.abs(index - currentIndex) * 0.05) + ')', 
-              opacity: Math.abs(index - currentIndex) > 1 ? 0 : 1, 
+            <div key={card.id} className="absolute" style={{ 
+              transform: `translateY(${adjustedOffsetY}px) translateX(${adjustedOffsetX}px) rotate(${rotation}deg) scale(${scale})`, 
+              opacity: Math.abs(index - currentIndex) > 2 ? 0 : 1 - Math.abs(index - currentIndex) * 0.3, 
               zIndex: filteredCards.length - Math.abs(index - currentIndex), 
-              transition: isDragging ? 'none' : 'transform 0.3s, opacity 0.3s' 
+              transition: isDragging ? 'none' : 'transform 0.3s ease-out, opacity 0.3s ease-out',
+              top: '50%',
+              left: '50%',
+              marginTop: '-200px', // Approximate card height offset
+              marginLeft: '-200px' // Approximate card width offset
             }}>
-              <div className="w-full h-full max-w-2xl mx-auto p-4">
-                <div className="relative h-full">
-                  {(card.type === 'caregiver') && <ParentCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} />}
-                  
-                  {(card.type === 'sales_hunter' || card.type === 'transactional_leader' || card.type === 'project_coordinator' || card.type === 'enterprise_innovator' || card.type === 'identity_manager') && <BusinessCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} />}
-                  
-                  {(card.type === 'deal_stacker' || card.type === 'status_seeker') && <ShoppingCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} />}
+              <div className="relative">
+                {(card.type === 'caregiver') && <EnhancedParentCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} />}
+                
+                {(card.type === 'sales_hunter' || card.type === 'transactional_leader' || card.type === 'project_coordinator' || card.type === 'enterprise_innovator' || card.type === 'identity_manager') && <EnhancedBusinessCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} />}
+                
+                {(card.type === 'deal_stacker' || card.type === 'status_seeker') && <EnhancedShoppingCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} />}
 
-                  {index === currentIndex && isHorizontal && Math.abs(dragOffset.x) > 50 && (
-                    <SwipeActionOverlay direction={dragOffset.x > 0 ? 'right' : 'left'} cardType={card.type} swipeDistance={dragOffset.x} />
-                  )}
-                </div>
+                {index === currentIndex && isHorizontal && Math.abs(dragOffset.x) > 50 && (
+                  <SwipeActionOverlay direction={dragOffset.x > 0 ? 'right' : 'left'} cardType={card.type} swipeDistance={dragOffset.x} />
+                )}
               </div>
             </div>
           );
