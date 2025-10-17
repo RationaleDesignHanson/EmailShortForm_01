@@ -14,27 +14,13 @@ class ImageGenerator {
       return this.cache.get(cacheKey);
     }
 
-    // Generate fallback gradient based on archetype
-    const fallbackBackground = this.getFallbackBackground(email.type, email.priority);
-
-    // If no API key, return fallback
-    if (!this.apiKey) {
-      this.cache.set(cacheKey, fallbackBackground);
-      return fallbackBackground;
-    }
-
-    try {
-      // For now, return enhanced gradients (Gemini API integration would go here)
-      // TODO: Implement actual Gemini API call with this.createImagePrompt(email)
-      const enhancedBackground = this.getEnhancedBackground(email.type, email.priority);
-      
-      this.cache.set(cacheKey, enhancedBackground);
-      return enhancedBackground;
-    } catch (error) {
-      console.error('Error generating background:', error);
-      this.cache.set(cacheKey, fallbackBackground);
-      return fallbackBackground;
-    }
+    // Generate enhanced gradient (always use enhanced, not fallback)
+    const enhancedBackground = this.getEnhancedBackground(email.type, email.priority);
+    
+    console.log(`🎨 Generated background for ${email.type}:`, enhancedBackground);
+    
+    this.cache.set(cacheKey, enhancedBackground);
+    return enhancedBackground;
   }
 
   // Create contextual prompt for AI image generation

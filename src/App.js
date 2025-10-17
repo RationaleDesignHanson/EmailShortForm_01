@@ -932,8 +932,11 @@ const App = () => {
           const adjustedOffsetX = isDragging && index === currentIndex ? dragOffset.x : 0;
           const isHorizontal = Math.abs(dragOffset.x) > Math.abs(dragOffset.y);
           const rotation = isDragging && index === currentIndex ? (dragOffset.x / 30) : 0;
-          const scale = 1 - Math.abs(index - currentIndex) * 0.03; // Subtle scale for depth
+          
+          // Background cards are slightly larger and scattered for deck effect
           const isTopCard = index === currentIndex;
+          const scale = isTopCard ? 1 : 1.05 + (Math.abs(index - currentIndex) * 0.02); // Background cards 5-7% larger
+          const scatter = !isTopCard ? (index % 2 === 0 ? 8 : -8) : 0; // Alternate left/right scatter
           
           // Calculate reveal progress for next card (0 to 0.8)
           const swipeProgress = isDragging && isTopCard ? Math.min(Math.abs(dragOffset.x) / 300, 1) : 0;
@@ -944,7 +947,7 @@ const App = () => {
               key={card.id} 
               className="absolute" 
               style={{ 
-                transform: `translateY(${adjustedOffsetY}px) translateX(${adjustedOffsetX}px) rotate(${rotation}deg) scale(${scale})`, 
+                transform: `translateY(${adjustedOffsetY}px) translateX(${adjustedOffsetX + scatter}px) rotate(${rotation}deg) scale(${scale})`, 
                 opacity: Math.abs(index - currentIndex) > 2 ? 0 : 1, // Show 3 cards max
                 zIndex: filteredCards.length - Math.abs(index - currentIndex), 
                 transition: isDragging ? 'none' : 'transform 0.3s ease-out, opacity 0.3s ease-out',
