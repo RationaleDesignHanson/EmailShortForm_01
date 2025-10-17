@@ -761,9 +761,17 @@ const App = () => {
 
   const handleSaveAction = (newAction) => {
     if (currentCard) {
-      setCards(prev => prev.map(c => 
-        c.id === currentCard.id ? { ...c, hpa: newAction } : c
-      ));
+      setCards(prev => prev.map(c => {
+        if (c.id === currentCard.id) {
+          // Update both hpa and metaCTA to reflect new action
+          return {
+            ...c,
+            hpa: newAction,
+            metaCTA: `Swipe Right: ${newAction}`
+          };
+        }
+        return c;
+      }));
     }
     setShowActionCustomizer(false);
     setCurrentCard(null);
