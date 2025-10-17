@@ -2,7 +2,8 @@
 class ImageGenerator {
   constructor() {
     this.cache = new Map(); // Simple in-memory cache
-    this.apiKey = process.env.REACT_APP_GEMINI_API_KEY || 'demo'; // Use 'demo' to enable Unsplash placeholder
+    // Gemini API key for image generation
+    this.apiKey = process.env.REACT_APP_GEMINI_API_KEY || 'AIzaSyA0rMQ31xJPOXXVEzlyP3_nLFvpV_-dQu4';
   }
 
   // Generate colored gradient for card (always use gradients for cards)
@@ -47,33 +48,45 @@ class ImageGenerator {
     return gradient;
   }
 
-  // Generate image using Gemini API or placeholder service
+  // Generate image using Gemini Imagen API
   async generateGeminiImage(email) {
     const prompt = this.createImagePrompt(email);
     
     try {
-      // For demo: Use Unsplash Source for contextual photographic backgrounds
-      // This provides beautiful, free placeholder images until Gemini is integrated
-      const keywords = this.getUnsplashKeywords(email.type);
-      const unsplashUrl = `https://source.unsplash.com/800x600/?${keywords}`;
+      // Use Gemini Imagen 3 for image generation
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=${this.apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            instances: [{ prompt: prompt }],
+            parameters: { 
+              sampleCount: 1,
+              aspectRatio: '16:9',
+              negativePrompt: 'text, watermark, logo, ugly, distorted'
+            }
+          })
+        }
+      );
       
-      console.log(`📸 Using Unsplash image for ${email.type}: ${keywords}`);
-      return unsplashUrl;
+      if (!response.ok) {
+        console.error('Gemini API error:', response.status, response.statusText);
+        return null;
+      }
       
-      // TODO: Replace with Gemini API when ready:
-      // const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     instances: [{ prompt: prompt }],
-      //     parameters: { sampleCount: 1 }
-      //   })
-      // });
-      // const data = await response.json();
-      // return data.predictions[0].bytesBase64Encoded;
+      const data = await response.json();
+      if (data.predictions && data.predictions[0]) {
+        // Convert base64 to data URL
+        const imageData = data.predictions[0].bytesBase64Encoded;
+        const dataUrl = `data:image/png;base64,${imageData}`;
+        console.log(`✨ Generated Gemini image for ${email.type}`);
+        return dataUrl;
+      }
       
+      return null;
     } catch (error) {
-      console.error('Image generation error:', error);
+      console.error('Gemini image generation error:', error);
       return null;
     }
   }

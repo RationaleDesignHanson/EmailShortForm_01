@@ -968,7 +968,8 @@ const App = () => {
         processedEmails={processedEmails} 
         currentArchetype={activeType}
         archetypeName={splayFilter ? splayFilter.name : (configs[activeType]?.title || 'Unknown')}
-        onOpenBottomSheet={handleOpenSplayView}
+        onOpenBottomSheet={() => setShowBottomSheet(true)}
+        onOpenSplayView={handleOpenSplayView}
         onPrevArchetype={() => switchArchetype('prev')}
         onNextArchetype={() => switchArchetype('next')}
       />

@@ -6,7 +6,8 @@ export const ProgressCounter = ({
   processedEmails, 
   currentArchetype, 
   archetypeName,
-  onOpenBottomSheet, 
+  onOpenBottomSheet,
+  onOpenSplayView,
   onPrevArchetype, 
   onNextArchetype 
 }) => {
@@ -25,12 +26,15 @@ export const ProgressCounter = ({
 
       {/* Progress Counter with Archetype Name */}
       <div className="flex flex-col items-center gap-2">
-        {/* Current Archetype Name */}
-        <div className="bg-slate-900/90 backdrop-blur-xl text-white px-4 py-1 rounded-xl shadow-xl border border-slate-700">
+        {/* Current Archetype Name - clickable to open splay view */}
+        <button 
+          onClick={onOpenSplayView}
+          className="bg-slate-900/90 backdrop-blur-xl hover:bg-slate-800/90 text-white px-4 py-1 rounded-xl shadow-xl border border-slate-700 transition-all"
+        >
           <span className="text-sm font-medium text-slate-300">{archetypeName}</span>
-        </div>
+        </button>
         
-        {/* Progress Counter */}
+        {/* Progress Counter - opens bottom sheet */}
         <button 
           onClick={onOpenBottomSheet}
           className="bg-slate-900/90 backdrop-blur-xl hover:bg-slate-800/90 text-white px-6 py-3 rounded-2xl shadow-2xl border border-slate-700 transition-all"
