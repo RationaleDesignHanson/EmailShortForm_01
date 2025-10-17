@@ -17,7 +17,7 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
           backgroundPosition: 'center',
         }}
       >
-        {/* iOS-style frosted glass - heavily blurred background visible through translucent material */}
+        {/* iOS-style frosted glass with specular highlights */}
         <div 
           className={`absolute inset-0 ${
             isTopCard 
@@ -32,9 +32,30 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
             WebkitBackdropFilter: isTopCard ? 'blur(40px) saturate(180%)' : 'blur(60px) saturate(120%)',
           }}
         />
+
+        {/* Glass rim lighting - subtle edge glow */}
+        {isTopCard && (
+          <div 
+            className="absolute inset-0 rounded-3xl pointer-events-none"
+            style={{
+              boxShadow: 'inset 0 1px 1px rgba(255, 255, 255, 0.6), inset 0 -1px 1px rgba(255, 255, 255, 0.3)',
+              border: '1px solid rgba(255, 255, 255, 0.4)',
+            }}
+          />
+        )}
+
+        {/* Specular highlight - dynamic shine effect */}
+        {isTopCard && (
+          <div 
+            className="absolute inset-0 rounded-3xl pointer-events-none"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 30%, transparent 70%, rgba(255, 255, 255, 0.2) 100%)',
+            }}
+          />
+        )}
         
-        {/* Content - only interactive on top card */}
-        <div className={`relative p-6 ${isTopCard ? 'cursor-pointer' : 'pointer-events-none'}`}>
+        {/* Content - only show on top card, hide completely on background cards */}
+        <div className={`relative p-6 ${isTopCard ? 'cursor-pointer opacity-100' : 'pointer-events-none opacity-0'}`}>
           {/* Meta CTA with Change button */}
           <div 
             className="rounded-xl p-3 mb-4 border border-white/30 shadow-lg"
