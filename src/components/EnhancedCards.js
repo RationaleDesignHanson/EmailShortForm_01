@@ -2,7 +2,7 @@ import React from 'react';
 import { FileText } from 'lucide-react';
 
 // Enhanced content-sized card with iOS-style frosted glass effect
-const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, backgroundImage, isTopCard = true }) => {
+const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, backgroundImage, isTopCard = true, revealProgress = 0 }) => {
   return (
     <div className="w-full max-w-md mx-auto">
       <div 
@@ -54,8 +54,13 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
           />
         )}
         
-        {/* Content - only show on top card, hide completely on background cards */}
-        <div className={`relative p-6 ${isTopCard ? 'cursor-pointer opacity-100' : 'pointer-events-none opacity-0'}`}>
+        {/* Content - progressively reveal as top card swipes away */}
+        <div 
+          className={`relative p-6 transition-opacity duration-100 ${isTopCard ? 'cursor-pointer' : 'pointer-events-none'}`}
+          style={{
+            opacity: isTopCard ? 1 : revealProgress
+          }}
+        >
           {/* Meta CTA with Change button */}
           <div 
             className="rounded-xl p-3 mb-4 border border-white/30 shadow-lg"
@@ -93,7 +98,7 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
   );
 };
 
-export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true }) => {
+export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true, revealProgress = 0 }) => {
   const displayInfo = card.kid || card.sender || { name: 'User', initial: 'U' };
   
   return (
@@ -104,6 +109,7 @@ export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeActio
       onCustomizeAction={onCustomizeAction}
       backgroundImage={card.aiBackground}
       isTopCard={isTopCard}
+      revealProgress={revealProgress}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
@@ -170,7 +176,7 @@ export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeActio
   );
 };
 
-export const EnhancedBusinessCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true }) => {
+export const EnhancedBusinessCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true, revealProgress = 0 }) => {
   const displayInfo = card.company || card.sender || card.project || card.source || { name: 'Business', initials: 'B' };
   const showMetrics = card.value && card.probability && card.score;
   
@@ -182,6 +188,7 @@ export const EnhancedBusinessCard = ({ card, isSeen, onViewEmail, onCustomizeAct
       onCustomizeAction={onCustomizeAction}
       backgroundImage={card.aiBackground}
       isTopCard={isTopCard}
+      revealProgress={revealProgress}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
@@ -265,7 +272,7 @@ export const EnhancedBusinessCard = ({ card, isSeen, onViewEmail, onCustomizeAct
   );
 };
 
-export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true }) => {
+export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true, revealProgress = 0 }) => {
   const storeName = card.store || card.airline || card.service || 'Store';
   const showPricing = card.salePrice && card.originalPrice;
   
@@ -277,6 +284,7 @@ export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAct
       onCustomizeAction={onCustomizeAction}
       backgroundImage={card.aiBackground}
       isTopCard={isTopCard}
+      revealProgress={revealProgress}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">

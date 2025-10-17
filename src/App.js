@@ -935,6 +935,10 @@ const App = () => {
           const scale = 1 - Math.abs(index - currentIndex) * 0.03; // Subtle scale for depth
           const isTopCard = index === currentIndex;
           
+          // Calculate reveal progress for next card (0 to 0.8)
+          const swipeProgress = isDragging && isTopCard ? Math.min(Math.abs(dragOffset.x) / 300, 1) : 0;
+          const nextCardReveal = index === currentIndex + 1 ? swipeProgress * 0.8 : 0;
+          
           return (
             <div 
               key={card.id} 
@@ -958,11 +962,11 @@ const App = () => {
               onTouchEnd={isTopCard ? handleDragEnd : undefined}
             >
               <div className="relative">
-                {(card.type === 'caregiver') && <EnhancedParentCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} isTopCard={isTopCard} />}
+                {(card.type === 'caregiver') && <EnhancedParentCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} isTopCard={isTopCard} revealProgress={nextCardReveal} />}
                 
-                {(card.type === 'sales_hunter' || card.type === 'transactional_leader' || card.type === 'project_coordinator' || card.type === 'enterprise_innovator' || card.type === 'identity_manager') && <EnhancedBusinessCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} isTopCard={isTopCard} />}
+                {(card.type === 'sales_hunter' || card.type === 'transactional_leader' || card.type === 'project_coordinator' || card.type === 'enterprise_innovator' || card.type === 'identity_manager') && <EnhancedBusinessCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} isTopCard={isTopCard} revealProgress={nextCardReveal} />}
                 
-                {(card.type === 'deal_stacker' || card.type === 'status_seeker') && <EnhancedShoppingCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} isTopCard={isTopCard} />}
+                {(card.type === 'deal_stacker' || card.type === 'status_seeker') && <EnhancedShoppingCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} isTopCard={isTopCard} revealProgress={nextCardReveal} />}
 
                 {isTopCard && isHorizontal && Math.abs(dragOffset.x) > 50 && (
                   <SwipeActionOverlay direction={dragOffset.x > 0 ? 'right' : 'left'} cardType={card.type} swipeDistance={dragOffset.x} />
