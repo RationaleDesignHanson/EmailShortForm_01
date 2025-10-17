@@ -120,25 +120,6 @@ export const SplashScreen = ({ onEnter }) => {
         </form>
 
 
-        {/* Features Preview */}
-        <div className="mt-8 grid grid-cols-2 gap-4 text-xs text-white/60">
-          <div className="bg-white/5 rounded-xl p-3">
-            <div className="font-semibold mb-1">🎯 Smart Sorting</div>
-            <div>8 intelligent archetypes</div>
-          </div>
-          <div className="bg-white/5 rounded-xl p-3">
-            <div className="font-semibold mb-1">👆 Intuitive Swipes</div>
-            <div>Natural gesture controls</div>
-          </div>
-          <div className="bg-white/5 rounded-xl p-3">
-            <div className="font-semibold mb-1">🎨 Beautiful UI</div>
-            <div>Frosted glass design</div>
-          </div>
-          <div className="bg-white/5 rounded-xl p-3">
-            <div className="font-semibold mb-1">⚡ Instant Actions</div>
-            <div>One-swipe email handling</div>
-          </div>
-        </div>
       </div>
     </div>
   );

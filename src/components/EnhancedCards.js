@@ -54,12 +54,13 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
           />
         )}
         
-        {/* Content - progressively reveal as top card swipes away (0 to 0.8) */}
+        {/* Content - show preview on background cards, reveal more as top swipes */}
         <div 
           className={`relative p-6 ${isTopCard ? 'cursor-pointer' : 'pointer-events-none'}`}
           style={{
-            opacity: isTopCard ? 1 : Math.min(revealProgress, 0.8),
-            transition: 'opacity 0.1s ease-out'
+            opacity: isTopCard ? 1 : Math.max(0.2, Math.min(revealProgress, 0.8)),
+            filter: isTopCard ? 'none' : `blur(${2 - (revealProgress * 2)}px)`,
+            transition: 'opacity 0.1s ease-out, filter 0.1s ease-out'
           }}
         >
           {/* Meta CTA with Change button */}
@@ -160,8 +161,8 @@ export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeActio
 
       {/* Content */}
       <div className="space-y-3">
-        <h3 className="text-white text-xl font-bold" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.8)' }}>{card.title}</h3>
-        <p className="text-white/95 text-base leading-relaxed" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.8)' }}>{card.summary}</p>
+        <h3 className="text-white text-xl font-bold" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.4)' }}>{card.title}</h3>
+        <p className="text-white/95 text-base leading-relaxed" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>{card.summary}</p>
 
         {card.requiresSignature && (
           <div className="bg-white/20 backdrop-blur-md rounded-xl p-3 flex items-center gap-3 border border-white/30">

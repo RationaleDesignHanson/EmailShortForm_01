@@ -959,8 +959,8 @@ const App = () => {
         backgroundPosition: 'center',
       }}
     >
-      {/* Dark overlay for better card visibility */}
-      <div className="absolute inset-0 bg-black/40" />
+      {/* Subtle vignette for depth (doesn't block photos) */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30" />
 
       {/* Global Progress Counter */}
       <ProgressCounter 
