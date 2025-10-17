@@ -2,7 +2,7 @@
 class ImageGenerator {
   constructor() {
     this.cache = new Map(); // Simple in-memory cache
-    this.apiKey = process.env.REACT_APP_GEMINI_API_KEY;
+    this.apiKey = process.env.REACT_APP_GEMINI_API_KEY || 'demo'; // Use 'demo' to enable Unsplash placeholder
   }
 
   // Generate contextual background image for email card
@@ -14,38 +14,97 @@ class ImageGenerator {
       return this.cache.get(cacheKey);
     }
 
-    // Generate enhanced gradient (always use enhanced, not fallback)
+    // Try to generate AI image if API key is available
+    if (this.apiKey) {
+      try {
+        const imageUrl = await this.generateGeminiImage(email);
+        if (imageUrl) {
+          this.cache.set(cacheKey, `url(${imageUrl})`);
+          return `url(${imageUrl})`;
+        }
+      } catch (error) {
+        console.error('Gemini API error, falling back to gradient:', error);
+      }
+    }
+
+    // Fallback to enhanced gradient
     const enhancedBackground = this.getEnhancedBackground(email.type, email.priority);
-    
-    console.log(`🎨 Generated background for ${email.type}:`, enhancedBackground);
+    console.log(`🎨 Using gradient for ${email.type}:`, enhancedBackground);
     
     this.cache.set(cacheKey, enhancedBackground);
     return enhancedBackground;
   }
 
-  // Create contextual prompt for AI image generation
+  // Generate image using Gemini API or placeholder service
+  async generateGeminiImage(email) {
+    const prompt = this.createImagePrompt(email);
+    
+    try {
+      // For demo: Use Unsplash Source for contextual photographic backgrounds
+      // This provides beautiful, free placeholder images until Gemini is integrated
+      const keywords = this.getUnsplashKeywords(email.type);
+      const unsplashUrl = `https://source.unsplash.com/800x600/?${keywords}`;
+      
+      console.log(`📸 Using Unsplash image for ${email.type}: ${keywords}`);
+      return unsplashUrl;
+      
+      // TODO: Replace with Gemini API when ready:
+      // const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({
+      //     instances: [{ prompt: prompt }],
+      //     parameters: { sampleCount: 1 }
+      //   })
+      // });
+      // const data = await response.json();
+      // return data.predictions[0].bytesBase64Encoded;
+      
+    } catch (error) {
+      console.error('Image generation error:', error);
+      return null;
+    }
+  }
+
+  // Get Unsplash search keywords for each archetype
+  getUnsplashKeywords(archetype) {
+    const keywords = {
+      caregiver: 'nature,park,family,peaceful,golden-hour',
+      sales_hunter: 'office,business,skyline,professional,modern',
+      transactional_leader: 'executive,minimal,architecture,corporate',
+      project_coordinator: 'workspace,creative,plants,natural-light',
+      enterprise_innovator: 'library,books,study,cozy,knowledge',
+      deal_stacker: 'shopping,urban,lights,vibrant,city',
+      status_seeker: 'travel,luxury,airport,hotel,premium',
+      identity_manager: 'technology,security,modern,minimal,blue'
+    };
+    
+    return keywords[archetype] || 'nature,calm,peaceful';
+  }
+
+  // Create contextual prompt for AI image generation (photographic scenes)
   createImagePrompt(email) {
-    const basePrompt = "Abstract, professional background image, soft focus, ";
+    const basePrompt = "Professional photographic background, soft focus bokeh, calming atmosphere, ";
     
     switch (email.type) {
       case 'caregiver':
-        return basePrompt + "warm family colors, school/education theme, soft pastels, nurturing atmosphere";
+        return basePrompt + "peaceful park with children playing in distance, warm afternoon sunlight, green grass, soft golden hour lighting, shallow depth of field";
       case 'sales_hunter':
-        return basePrompt + "business growth theme, upward trends, professional blue/green tones, success imagery";
+        return basePrompt + "modern office space with city skyline view through windows, professional lighting, sleek glass and steel, upward perspective";
       case 'transactional_leader':
-        return basePrompt + "executive/corporate theme, clean lines, authoritative colors, leadership imagery";
+        return basePrompt + "executive boardroom table with soft morning light, minimalist professional environment, architectural lines, neutral tones";
       case 'project_coordinator':
-        return basePrompt + "collaboration theme, timeline/milestone imagery, organized patterns, team colors";
+        return basePrompt + "collaborative workspace with natural light, organized desk setup, plants and windows, creative studio atmosphere";
       case 'enterprise_innovator':
-        return basePrompt + "innovation/learning theme, bright inspiring colors, knowledge/growth imagery";
+        return basePrompt + "library or study with books softly out of focus, warm ambient lighting, knowledge and learning atmosphere, cozy and inspiring";
       case 'deal_stacker':
-        return basePrompt + "commerce/shopping theme, vibrant deal colors, savings/value imagery";
+        return basePrompt + "modern shopping district bokeh lights, vibrant storefronts blurred, evening golden hour, exciting urban energy";
       case 'status_seeker':
-        return basePrompt + "travel/luxury theme, premium colors, journey/destination imagery";
+        return basePrompt + "airport lounge or luxury hotel lobby, soft architectural lighting, premium materials, travel and sophistication";
       case 'identity_manager':
-        return basePrompt + "security/tech theme, protective colors, shield/lock imagery, trust elements";
+        return basePrompt + "secure vault or modern tech facility, clean lines, blue-tinted professional lighting, trustworthy atmosphere";
       default:
-        return basePrompt + "neutral professional theme, calming colors";
+        return basePrompt + "calm nature scene with soft bokeh, peaceful environment, gentle natural lighting";
     }
   }
 
