@@ -1111,7 +1111,7 @@ const App = () => {
   // Main swipe feed
   return (
     <div 
-      className="w-full h-screen relative overflow-hidden"
+      className="w-full h-screen flex items-center justify-center"
       style={{
         background: appBackground,
         backgroundSize: '120%',

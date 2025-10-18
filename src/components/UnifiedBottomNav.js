@@ -12,7 +12,7 @@ export const UnifiedBottomNav = ({
   const progressPercent = Math.max(0, 100 - (emailsLeft * 5)); // Rough progress
 
   return (
-    <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40">
+    <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-40">
       <div className="bg-slate-900/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-700 overflow-hidden">
         {/* Main Navigation Bar */}
         <div className="flex items-center px-4 py-3">
