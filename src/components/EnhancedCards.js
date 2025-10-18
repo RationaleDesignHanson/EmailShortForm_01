@@ -100,6 +100,8 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
   );
 };
 
+export { EnhancedCard };
+
 export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true, revealProgress = 0, onSignature }) => {
   const displayInfo = card.kid || card.sender || { name: 'User', initial: 'U' };
   
