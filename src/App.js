@@ -738,8 +738,16 @@ const App = () => {
 
     if (direction === 'right') {
       if (isLong) {
-        // Long right = Action Modal (route based on card's action)
+        // Long right = Route to appropriate modal
         setCurrentCard(card);
+        
+        // Shopping/Travel cards use their robust dedicated modals
+        if (card.type === 'deal_stacker' || card.type === 'status_seeker') {
+          setShowShoppingModal(true);
+          return;
+        }
+        
+        // All other cards use action module system
         setCurrentAction(card.hpa);
         setShowActionModule(true);
         return;
