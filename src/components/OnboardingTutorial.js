@@ -119,7 +119,7 @@ export const OnboardingTutorial = ({ onComplete }) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="w-96 h-96 bg-gradient-to-br from-blue-800 via-indigo-500 to-purple-800 p-8 rounded-3xl shadow-xl">
+      <div className="w-full min-h-full bg-gradient-to-br from-blue-800 via-indigo-500 to-purple-800 p-8 rounded-3xl shadow-xl">
         {/* Skip Button */}
         <button
           onClick={handleSkip}
