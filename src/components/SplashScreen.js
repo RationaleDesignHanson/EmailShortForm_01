@@ -45,8 +45,8 @@ export const SplashScreen = ({ onEnter }) => {
           </div>
         </div>
 
-        {/* Title - centered under middle zero, shifted 5px left */}
-        <h1 className="text-4xl font-bold text-white mb-8" style={{ marginLeft: '-5px' }}>
+        {/* Title - centered under middle zero, shifted 7px left */}
+        <h1 className="text-4xl font-bold text-white mb-8" style={{ marginLeft: '-7px' }}>
           zero
         </h1>
 
