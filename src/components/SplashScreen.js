@@ -75,7 +75,7 @@ export const SplashScreen = ({ onEnter }) => {
         <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 mb-8 border border-white/20">
           <div className="text-white/90 font-semibold mb-2">🎭 Demo Experience</div>
           <div className="text-white/70 text-sm">
-            You'll be playing as <strong>Sarah Chen</strong>, a working parent managing family, career, and personal life through zero's smart, category‑based inbox.
+            You'll be playing as <strong>Sarah Chen</strong>, a working parent managing family, career, and personal life through zero's smart, short-form email app.
           </div>
         </div>
 
