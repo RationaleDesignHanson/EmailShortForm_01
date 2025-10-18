@@ -652,6 +652,7 @@ const App = () => {
           // Use the 50 cards defined in this file
           const coherentCards = generateInitialCards();
           console.log('📧 Loaded coherent cards:', coherentCards?.length || 0, 'emails');
+          console.log('📊 Unseen cards:', coherentCards.filter(c => c.state === 'unseen').length);
           
           if (!coherentCards || coherentCards.length === 0) {
             console.error('❌ No cards returned!');
