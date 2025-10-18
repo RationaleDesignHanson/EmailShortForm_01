@@ -26,7 +26,7 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
           }`}
           style={{
             backgroundColor: isTopCard 
-              ? 'rgba(255, 255, 255, 0.15)' 
+              ? 'rgba(255, 255, 255, 0.08)' 
               : `rgba(0, 0, 0, ${0.50 - (revealProgress * 0.3)})`,  // 0.50 to 0.20 as swipe progresses
             backdropFilter: isTopCard ? 'blur(40px) saturate(180%)' : 'blur(60px) saturate(120%)',
             WebkitBackdropFilter: isTopCard ? 'blur(40px) saturate(180%)' : 'blur(60px) saturate(120%)',
