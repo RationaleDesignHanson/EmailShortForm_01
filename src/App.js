@@ -582,21 +582,10 @@ const App = () => {
   const [showSplayView, setShowSplayView] = useState(false);
   const [splayFilter, setSplayFilter] = useState(null);
 
-  // Archetype background gradients that match card themes
-  const archetypeBackgrounds = {
-    caregiver: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 30%, #ec4899 70%, #f43f5e 100%)', // Purple/pink family
-    sales_hunter: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 30%, #06b6d4 70%, #0891b2 100%)', // Blue/cyan
-    transactional_leader: 'linear-gradient(135deg, #475569 0%, #334155 30%, #1e293b 70%, #0f172a 100%)', // Dark slate
-    project_coordinator: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 30%, #06b6d4 70%, #0891b2 100%)', // Teal
-    enterprise_innovator: 'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 30%, #7c3aed 70%, #6d28d9 100%)', // Purple learning
-    deal_stacker: 'linear-gradient(135deg, #10b981 0%, #059669 30%, #34d399 70%, #6ee7b7 100%)', // Green deals
-    status_seeker: 'linear-gradient(135deg, #f59e0b 0%, #d97706 30%, #fb923c 70%, #f97316 100%)', // Gold travel
-    identity_manager: 'linear-gradient(135deg, #ef4444 0%, #dc2626 30%, #f97316 70%, #fb923c 100%)' // Red/orange security
-  };
-
-  // Update app background when archetype changes
+  // Update app background when archetype changes - use imageGenerator for consistency
   React.useEffect(() => {
-    setAppBackground(archetypeBackgrounds[activeType] || archetypeBackgrounds.caregiver);
+    const bg = imageGenerator.getEnhancedBackground(activeType);
+    setAppBackground(bg);
   }, [activeType]);
   const [showSnoozePicker, setShowSnoozePicker] = useState(false);
   const [snoozeDuration, setSnoozeDuration] = useState(1); // Default 1 hour
