@@ -93,28 +93,81 @@ export const ReviewApproveModal = ({ card, onComplete, onCancel }) => {
 export const AddToCalendarModal = ({ card, onComplete, onCancel }) => {
   const [selectedSupplies, setSelectedSupplies] = useState([]);
   
-  // Smart detection: Does this card mention supplies?
+  // Smart detection: What does this card need?
   const needsSupplies = card.summary?.toLowerCase().includes('supplies') || 
-                        card.summary?.toLowerCase().includes('poster board') ||
-                        card.title?.toLowerCase().includes('supplies');
+                        card.summary?.toLowerCase().includes('poster board');
+  const isBookFair = card.title?.toLowerCase().includes('book fair');
+  const isHotelBooking = card.title?.toLowerCase().includes('points') || 
+                         card.summary?.toLowerCase().includes('stays') ||
+                         card.airline?.toLowerCase().includes('hilton');
   
-  // Auto-suggest relevant supplies based on context
-  const suggestedSupplies = needsSupplies ? [
-    { 
-      id: 's1',
-      name: 'Poster Board 3-Pack', 
-      price: 12.99,
-      image: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=400&q=80',
-      store: 'Amazon Prime'
-    },
-    { 
-      id: 's2',
-      name: 'Crayola Markers 24-Count', 
-      price: 8.99,
-      image: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&w=400&q=80',
-      store: 'Amazon Prime'
-    }
-  ] : [];
+  // Context-aware product suggestions
+  let suggestedSupplies = [];
+  
+  if (needsSupplies) {
+    // Science fair supplies
+    suggestedSupplies = [
+      { 
+        id: 's1',
+        name: 'Poster Board 3-Pack', 
+        price: 12.99,
+        image: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=400&q=80',
+        store: 'Amazon Prime'
+      },
+      { 
+        id: 's2',
+        name: 'Crayola Markers 24-Count', 
+        price: 8.99,
+        image: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&w=400&q=80',
+        store: 'Amazon Prime'
+      }
+    ];
+  } else if (isBookFair) {
+    // Popular kids' books
+    suggestedSupplies = [
+      { 
+        id: 'b1',
+        name: 'Wonder by R.J. Palacio', 
+        price: 14.99,
+        image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&q=80',
+        store: 'Amazon'
+      },
+      { 
+        id: 'b2',
+        name: 'Harry Potter Box Set', 
+        price: 49.99,
+        image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=400&q=80',
+        store: 'Amazon'
+      },
+      { 
+        id: 'b3',
+        name: 'Diary of a Wimpy Kid Collection', 
+        price: 29.99,
+        image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80',
+        store: 'Amazon'
+      }
+    ];
+  } else if (isHotelBooking) {
+    // Hotel room options
+    suggestedSupplies = [
+      { 
+        id: 'h1',
+        name: 'Standard King Room', 
+        price: 189.00,
+        image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=400&q=80',
+        store: 'Hilton Hotels',
+        perks: '2X points'
+      },
+      { 
+        id: 'h2',
+        name: 'Executive Suite', 
+        price: 299.00,
+        image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=400&q=80',
+        store: 'Hilton Hotels',
+        perks: '3X points + lounge access'
+      }
+    ];
+  }
 
   const toggleSupply = (supplyId) => {
     setSelectedSupplies(prev => 
@@ -157,12 +210,14 @@ export const AddToCalendarModal = ({ card, onComplete, onCancel }) => {
         </div>
       </div>
 
-      {/* Smart Supply Detection */}
-      {needsSupplies && suggestedSupplies.length > 0 && (
+      {/* Smart Supply/Product Detection */}
+      {suggestedSupplies.length > 0 && (
         <div className="mb-4">
           <div className="flex items-center gap-2 mb-3">
             <ShoppingBag className="text-green-400" size={20} />
-            <h4 className="text-white font-semibold">Supplies Needed</h4>
+            <h4 className="text-white font-semibold">
+              {isBookFair ? 'Popular Books' : isHotelBooking ? 'Room Options' : 'Supplies Needed'}
+            </h4>
           </div>
           <div className="space-y-2">
             {suggestedSupplies.map(supply => (
@@ -213,7 +268,11 @@ export const AddToCalendarModal = ({ card, onComplete, onCancel }) => {
       >
         <Calendar size={20} />
         {selectedSupplies.length > 0 
-          ? `Add to Calendar & Order Supplies ($${totalSupplyCost.toFixed(2)})`
+          ? isHotelBooking 
+            ? `Book Room ($${totalSupplyCost.toFixed(2)})`
+            : isBookFair
+              ? `Add to Calendar & Order Books ($${totalSupplyCost.toFixed(2)})`
+              : `Add to Calendar & Order Supplies ($${totalSupplyCost.toFixed(2)})`
           : 'Add to Calendar'
         }
       </button>
