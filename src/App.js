@@ -529,14 +529,15 @@ const App = () => {
 
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
   
-  // Apply splay filter if active - exclude seen, snoozed, dismissed cards
+  // Apply splay filter if active - exclude actioned, seen, snoozed, dismissed cards
   let filteredCards = cards.filter(c => 
     c.type === activeType && 
     c.state !== 'dismissed' && 
     c.state !== 'deleted' && 
     c.state !== 'archived' && 
     c.state !== 'seen' &&
-    c.state !== 'snoozed'
+    c.state !== 'snoozed' &&
+    c.state !== 'actioned'
   );
   if (splayFilter) {
     filteredCards = filteredCards.filter(splayFilter.filter);
