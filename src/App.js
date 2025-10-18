@@ -415,7 +415,67 @@ const generateInitialCards = () => {
     // C4: Digital Identity Manager
     { id: 'idm1', type: 'identity_manager', state: 'unseen', priority: 'critical', hpa: 'Verify Identity', service: 'Amazon', timeAgo: getTimeAgo(0, 0), title: 'Password Reset Request', summary: 'Someone requested a password reset for your account', metaCTA: 'Swipe Right: Verify Identity', security: true, expiresIn: '15 minutes', dataSources: [{ subject: 'Password Reset', from: 'security@amazon.com', date: getTimeAgo(0, 0) }] },
 
-    { id: 'idm2', type: 'identity_manager', state: 'unseen', priority: 'high', hpa: 'Confirm or Deny', service: 'PayPal', timeAgo: getTimeAgo(0, 2), title: 'New Device Login Detected', summary: 'Login from iPhone in San Francisco, CA', metaCTA: 'Swipe Right: Confirm or Deny', security: true, dataSources: [{ subject: 'Security Alert', from: 'security@paypal.com', date: getTimeAgo(0, 2) }] }
+    { id: 'idm2', type: 'identity_manager', state: 'unseen', priority: 'high', hpa: 'Confirm or Deny', service: 'PayPal', timeAgo: getTimeAgo(0, 2), title: 'New Device Login Detected', summary: 'Login from iPhone in San Francisco, CA', metaCTA: 'Swipe Right: Confirm or Deny', security: true, dataSources: [{ subject: 'Security Alert', from: 'security@paypal.com', date: getTimeAgo(0, 2) }] },
+
+    // === EXPANSION: 30 More Emails for Better Demo Experience ===
+
+    // More Family (Caregiver) emails
+    { id: 'cc4', type: 'caregiver', state: 'unseen', priority: 'high', hpa: 'Respond', kid: { name: 'Emma Chen', initial: 'E', grade: '3rd Grade' }, timeAgo: getTimeAgo(0, 4), title: 'Parent-Teacher Conference Request', summary: 'Schedule 20-min conference to discuss Emma\'s reading progress', metaCTA: 'Swipe Right: Schedule Meeting', dataSources: [{ subject: 'Conference Request', from: 'Mrs. Anderson', date: getTimeAgo(0, 4) }] },
+    
+    { id: 'cc5', type: 'caregiver', state: 'unseen', priority: 'medium', hpa: 'Add to Calendar', kid: { name: 'Lucas Chen', initial: 'L', grade: '7th Grade' }, timeAgo: getTimeAgo(0, 8), title: 'Science Fair Next Week', summary: 'Final presentation Monday 6 PM, need poster board and supplies', metaCTA: 'Swipe Right: Add to Calendar', dataSources: [{ subject: 'Science Fair Reminder', from: 'Mr. Thompson', date: getTimeAgo(0, 8) }] },
+    
+    { id: 'cc6', type: 'caregiver', state: 'unseen', priority: 'critical', hpa: 'Sign & Pay', kid: { name: 'Zoe Chen', initial: 'Z', grade: 'Kindergarten' }, timeAgo: getTimeAgo(0, 1), title: 'Field Trip Payment Due Today', summary: '$15 lunch money for zoo trip Friday, payment portal closes 5 PM', metaCTA: 'Swipe Right: Quick Pay Now', requiresSignature: true, dataSources: [{ subject: 'Field Trip Payment', from: 'Ms. Rodriguez', date: getTimeAgo(0, 1) }] },
+    
+    { id: 'cc7', type: 'caregiver', state: 'unseen', priority: 'low', hpa: 'Review', kid: { name: 'Emma Chen', initial: 'E', grade: '3rd Grade' }, timeAgo: getTimeAgo(1), title: 'Book Fair This Week', summary: 'School book fair running Mon-Fri, order online or in person', metaCTA: 'Swipe Left: Review Later', dataSources: [{ subject: 'Book Fair', from: 'library@school.edu', date: getTimeAgo(1) }] },
+
+    // More Executive (Transactional Leader) emails
+    { id: 'tl4', type: 'transactional_leader', state: 'unseen', priority: 'critical', hpa: 'Review & Approve', sender: { name: 'Jennifer Walsh', initial: 'J' }, company: { name: 'TechCorp', initials: 'TC' }, timeAgo: getTimeAgo(0, 1), title: 'Q4 Budget Approval Needed', summary: '$340K mobile innovation budget before board meeting Thursday', metaCTA: 'Swipe Right: Review & Approve', dataSources: [{ subject: 'Budget Approval', from: 'j.walsh@techcorp.com', date: getTimeAgo(0, 1) }] },
+    
+    { id: 'tl5', type: 'transactional_leader', state: 'unseen', priority: 'high', hpa: 'Respond', sender: { name: 'Mike Rodriguez', initial: 'M' }, timeAgo: getTimeAgo(0, 3), title: 'Team Offsite Planning', summary: 'Need your input on Q1 offsite location and agenda by Friday', metaCTA: 'Swipe Right: Provide Input', dataSources: [{ subject: 'Offsite Planning', from: 'm.rodriguez@techcorp.com', date: getTimeAgo(0, 3) }] },
+    
+    { id: 'tl6', type: 'transactional_leader', state: 'unseen', priority: 'medium', hpa: 'Review', sender: { name: 'Lisa Park', initial: 'L' }, timeAgo: getTimeAgo(0, 6), title: 'Hiring Update: 3 Candidates', summary: 'Shortlist for Senior Engineer role, interviews scheduled next week', metaCTA: 'Swipe Right: Review Candidates', dataSources: [{ subject: 'Hiring Update', from: 'l.park@techcorp.com', date: getTimeAgo(0, 6) }] },
+
+    // More Sales (Sales Hunter) emails
+    { id: 'sh3', type: 'sales_hunter', state: 'unseen', priority: 'critical', hpa: 'Follow Up Now', company: { name: 'MegaCorp', initials: 'MC' }, value: '$175K', probability: 78, score: 88, timeAgo: getTimeAgo(0, 0), title: 'Hot Lead: MegaCorp Expansion', summary: 'CTO interested in enterprise package, wants demo this week', metaCTA: 'Swipe Right: Schedule Demo', dataSources: [{ subject: 'Enterprise Interest', from: 'cto@megacorp.com', date: getTimeAgo(0, 0) }] },
+    
+    { id: 'sh4', type: 'sales_hunter', state: 'unseen', priority: 'high', hpa: 'Send Proposal', company: { name: 'StartupXYZ', initials: 'SX' }, value: '$45K', probability: 65, score: 72, timeAgo: getTimeAgo(0, 2), title: 'Proposal Request - Q1 Contract', summary: 'Need detailed pricing breakdown by end of week', metaCTA: 'Swipe Right: Send Proposal', dataSources: [{ subject: 'Proposal Request', from: 'founder@startupxyz.com', date: getTimeAgo(0, 2) }] },
+    
+    { id: 'sh5', type: 'sales_hunter', state: 'unseen', priority: 'medium', hpa: 'Check In', company: { name: 'BizSolutions', initials: 'BS' }, value: '$92K', probability: 55, score: 68, timeAgo: getTimeAgo(0, 5), title: 'Monthly Check-in: BizSolutions', summary: 'Haven\'t heard back on pilot program, sent proposal 2 weeks ago', metaCTA: 'Swipe Right: Send Follow-up', dataSources: [{ subject: 'Pilot Program', from: 'ops@bizsolutions.com', date: getTimeAgo(0, 5) }] },
+
+    // More Projects (Project Coordinator) emails
+    { id: 'pc3', type: 'project_coordinator', state: 'unseen', priority: 'critical', hpa: 'Resolve Blocker', project: { name: 'Mobile App v2.0', initials: 'MA' }, timeAgo: getTimeAgo(0, 1), title: 'Critical Bug in Production', summary: 'Payment flow broken for iOS users, affecting 40% of customers', metaCTA: 'Swipe Right: Join War Room', dataSources: [{ subject: 'P1 Bug Alert', from: 'engineering@company.com', date: getTimeAgo(0, 1) }] },
+    
+    { id: 'pc4', type: 'project_coordinator', state: 'unseen', priority: 'high', hpa: 'Review Milestone', project: { name: 'Q4 Launch', initials: 'QL' }, timeAgo: getTimeAgo(0, 4), title: 'Sprint Review Tomorrow', summary: 'Demo ready for stakeholders, need your sign-off on features', metaCTA: 'Swipe Right: Review & Approve', dataSources: [{ subject: 'Sprint Review', from: 'scrum@company.com', date: getTimeAgo(0, 4) }] },
+    
+    { id: 'pc5', type: 'project_coordinator', state: 'unseen', priority: 'medium', hpa: 'Update Status', project: { name: 'Design System', initials: 'DS' }, timeAgo: getTimeAgo(0, 7), title: 'Components Library 80% Complete', summary: 'Button, form, and nav components ready for QA review', metaCTA: 'Swipe Right: Start QA Review', dataSources: [{ subject: 'Design Update', from: 'design@company.com', date: getTimeAgo(0, 7) }] },
+
+    // More Learning (Enterprise Innovator) emails
+    { id: 'ei3', type: 'enterprise_innovator', state: 'unseen', priority: 'high', hpa: 'Register', source: { name: 'Y Combinator', initials: 'YC' }, timeAgo: getTimeAgo(0, 2), title: 'Startup School Cohort Starting', summary: 'Free 8-week program on building products, applications open', metaCTA: 'Swipe Right: Register Now', dataSources: [{ subject: 'Startup School', from: 'programs@ycombinator.com', date: getTimeAgo(0, 2) }] },
+    
+    { id: 'ei4', type: 'enterprise_innovator', state: 'unseen', priority: 'medium', hpa: 'Watch Webinar', source: { name: 'Product School', initials: 'PS' }, timeAgo: getTimeAgo(0, 5), title: 'AI Product Management Masterclass', summary: 'Live session Thursday: Integrating AI into product strategy', metaCTA: 'Swipe Right: Save to Calendar', dataSources: [{ subject: 'Webinar Invitation', from: 'events@productschool.com', date: getTimeAgo(0, 5) }] },
+    
+    { id: 'ei5', type: 'enterprise_innovator', state: 'unseen', priority: 'low', hpa: 'Save for Later', source: { name: 'Harvard Business Review', initials: 'HB' }, timeAgo: getTimeAgo(1), title: 'The Future of Remote Work', summary: 'Research on hybrid team effectiveness and productivity metrics', metaCTA: 'Swipe Left: Save Article', dataSources: [{ subject: 'HBR Newsletter', from: 'newsletter@hbr.org', date: getTimeAgo(1) }] },
+
+    // More Shopping (Deal Stacker) emails
+    { id: 'ds3', type: 'deal_stacker', state: 'unseen', priority: 'high', hpa: 'Claim Deal', store: 'KitchenPro', timeAgo: getTimeAgo(0, 2), title: 'Stand Mixer - 45% Off Today Only', productImage: 'Kitchen Mixer', originalPrice: 399.99, salePrice: 219.99, discount: 45, urgent: true, expiresIn: '8 hours', metaCTA: 'Swipe Right: Claim Deal', promoCode: 'KITCHEN45', dataSources: [{ subject: 'Daily Deal', from: 'deals@kitchenpro.com', date: getTimeAgo(0, 2) }] },
+    
+    { id: 'ds4', type: 'deal_stacker', state: 'unseen', priority: 'medium', hpa: 'Consider', store: 'Home Depot', timeAgo: getTimeAgo(0, 4), title: 'Spring Garden Sale - 30% Off', productImage: 'Garden Tools', originalPrice: 89.99, salePrice: 62.99, discount: 30, urgent: false, expiresIn: '5 days', metaCTA: 'Swipe Right: Browse Sale', dataSources: [{ subject: 'Garden Sale', from: 'sales@homedepot.com', date: getTimeAgo(0, 4) }] },
+    
+    { id: 'ds5', type: 'deal_stacker', state: 'unseen', priority: 'low', hpa: 'Unsubscribe', store: 'Fashion Outlet', timeAgo: getTimeAgo(2), title: 'Weekly Clearance Event', productImage: 'Clothing', originalPrice: 79.99, salePrice: 39.99, discount: 50, urgent: false, expiresIn: '7 days', metaCTA: 'Swipe Left: Not Interested', dataSources: [{ subject: 'Clearance', from: 'sales@fashionoutlet.com', date: getTimeAgo(2) }] },
+
+    // More Travel (Status Seeker) emails
+    { id: 'ss3', type: 'status_seeker', state: 'unseen', priority: 'high', hpa: 'Book Now', airline: 'Hilton Hotels', timeAgo: getTimeAgo(0, 3), title: 'Double Points Promotion', summary: '2X points on all stays booked this week, valid through Q1', metaCTA: 'Swipe Right: Book Stay', dataSources: [{ subject: 'Points Promotion', from: 'hilton@honors.com', date: getTimeAgo(0, 3) }] },
+    
+    { id: 'ss4', type: 'status_seeker', state: 'unseen', priority: 'medium', hpa: 'Review', airline: 'Delta Airlines', timeAgo: getTimeAgo(0, 6), title: 'Year-End Status Summary', summary: 'You\'re 5,000 miles from Diamond status, targeted offers available', metaCTA: 'Swipe Right: View Offers', dataSources: [{ subject: 'Status Update', from: 'skymiles@delta.com', date: getTimeAgo(0, 6) }] },
+    
+    { id: 'ss5', type: 'status_seeker', state: 'unseen', priority: 'low', hpa: 'Consider', airline: 'Hertz Rentals', timeAgo: getTimeAgo(1), title: 'President\'s Circle Fast Pass', summary: 'Skip the counter forever with our premium membership', metaCTA: 'Swipe Left: Maybe Later', dataSources: [{ subject: 'Upgrade Offer', from: 'goldplus@hertz.com', date: getTimeAgo(1) }] },
+
+    // More Security (Identity Manager) emails
+    { id: 'idm3', type: 'identity_manager', state: 'unseen', priority: 'critical', hpa: 'Secure Account', service: 'Bank of America', timeAgo: getTimeAgo(0, 0), title: 'Unusual Activity Detected', summary: '$500 purchase attempt from new location, confirm or decline', metaCTA: 'Swipe Right: Verify Now', security: true, expiresIn: '10 minutes', dataSources: [{ subject: 'Fraud Alert', from: 'security@bofa.com', date: getTimeAgo(0, 0) }] },
+    
+    { id: 'idm4', type: 'identity_manager', state: 'unseen', priority: 'high', hpa: 'Update Password', service: 'Microsoft', timeAgo: getTimeAgo(0, 3), title: 'Password Expiring Soon', summary: 'Your work account password expires in 3 days, update now', metaCTA: 'Swipe Right: Update Password', security: true, dataSources: [{ subject: 'Password Expiration', from: 'admin@microsoft.com', date: getTimeAgo(0, 3) }] },
+    
+    { id: 'idm5', type: 'identity_manager', state: 'unseen', priority: 'medium', hpa: 'Review Activity', service: 'Google', timeAgo: getTimeAgo(0, 8), title: 'New Device Added to Account', summary: 'iPad Pro added to your Google account from home network', metaCTA: 'Swipe Right: Confirm Device', security: true, dataSources: [{ subject: 'Security Notification', from: 'no-reply@google.com', date: getTimeAgo(0, 8) }] }
   ];
 };
 
