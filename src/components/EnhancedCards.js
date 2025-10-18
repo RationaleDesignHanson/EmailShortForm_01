@@ -344,10 +344,10 @@ export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAct
             onClick={() => onProductClick && onProductClick(card)}
             className="w-full bg-white/10 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/30 mb-3 hover:border-white/50 transition-all cursor-pointer group"
           >
-            {/* Product image from Unsplash */}
-            <div className="relative h-48 bg-slate-700">
+            {/* Product image - use hardcoded URL for instant loading */}
+            <div className="relative h-48 bg-gradient-to-br from-slate-700 to-slate-900">
               <img 
-                src={`https://source.unsplash.com/400x300/?${card.productImage}`}
+                src={card.productImageUrl || `https://source.unsplash.com/400x300/?${card.productImage}`}
                 alt={card.title}
                 className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
                 loading="lazy"
