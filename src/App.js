@@ -632,6 +632,17 @@ const App = () => {
 
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
   
+  // Load selected archetypes from sessionStorage (resets on refresh)
+  const [selectedArchetypes, setSelectedArchetypes] = useState(() => {
+    const saved = sessionStorage.getItem('selectedArchetypes');
+    return saved ? JSON.parse(saved) : archetypes;
+  });
+
+  // Save to sessionStorage whenever selection changes
+  React.useEffect(() => {
+    sessionStorage.setItem('selectedArchetypes', JSON.stringify(selectedArchetypes));
+  }, [selectedArchetypes]);
+  
   // Apply splay filter if active - exclude actioned, seen, snoozed, dismissed, replied cards
   let filteredCards = cards.filter(c => 
     c.type === activeType && 
@@ -674,10 +685,12 @@ const App = () => {
       
       const initializeCards = async () => {
         try {
-          // Use the 50 cards defined in this file
-          const coherentCards = generateInitialCards();
+          // Use the 50 cards defined in this file, filtered by selected archetypes
+          const allCards = generateInitialCards();
+          const coherentCards = allCards.filter(card => selectedArchetypes.includes(card.type));
           console.log('📧 Loaded coherent cards:', coherentCards?.length || 0, 'emails');
           console.log('📊 Unseen cards:', coherentCards.filter(c => c.state === 'unseen').length);
+          console.log('🎯 Selected archetypes:', selectedArchetypes.length);
           
           if (!coherentCards || coherentCards.length === 0) {
             console.error('❌ No cards returned!');
@@ -731,16 +744,17 @@ const App = () => {
   */
 
   const switchArchetype = (direction) => {
-    const currentIdx = archetypes.indexOf(activeType);
+    // Only cycle through selected archetypes
+    const currentIdx = selectedArchetypes.indexOf(activeType);
     let newIdx;
     
     if (direction === 'next') {
-      newIdx = (currentIdx + 1) % archetypes.length;
+      newIdx = (currentIdx + 1) % selectedArchetypes.length;
     } else {
-      newIdx = (currentIdx - 1 + archetypes.length) % archetypes.length;
+      newIdx = (currentIdx - 1 + selectedArchetypes.length) % selectedArchetypes.length;
     }
     
-    setActiveType(archetypes[newIdx]);
+    setActiveType(selectedArchetypes[newIdx]);
     setCurrentIndex(0);
   };
 
@@ -1183,7 +1197,7 @@ const App = () => {
   }
 
   if (appState === 'onboarding') {
-    return <OnboardingTutorial onComplete={handleOnboardingComplete} />;
+    return <OnboardingTutorial onComplete={handleOnboardingComplete} selectedArchetypes={selectedArchetypes} setSelectedArchetypes={setSelectedArchetypes} />;
   }
 
   if (appState === 'celebration') {

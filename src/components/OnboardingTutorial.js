@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, ArrowLeft, CheckCircle, X, Zap, Sparkles, Briefcase, TrendingUp, Calendar, Baby, ShoppingBag, Award, AlertTriangle } from 'lucide-react';
 
-export const OnboardingTutorial = ({ onComplete }) => {
+export const OnboardingTutorial = ({ onComplete, selectedArchetypes, setSelectedArchetypes }) => {
   const [currentStep, setCurrentStep] = useState(0);
 
   const steps = [
@@ -73,20 +73,21 @@ export const OnboardingTutorial = ({ onComplete }) => {
       action: 'Next'
     },
     {
-      title: 'Smart Categories 🎯',
-      content: 'zero automatically sorts emails into 8 simple categories:',
+      title: 'Choose Your Categories 🎯',
+      content: 'Select which types of emails you want to see. You can always change this later:',
       icon: <div className="text-4xl">🎭</div>,
       categories: [
-        { icon: Baby, label: 'Family', gradient: 'from-purple-400 to-pink-500' },
-        { icon: Briefcase, label: 'Executive', gradient: 'from-slate-400 to-slate-600' },
-        { icon: TrendingUp, label: 'Sales', gradient: 'from-blue-400 to-cyan-500' },
-        { icon: Calendar, label: 'Projects', gradient: 'from-teal-400 to-cyan-500' },
-        { icon: Sparkles, label: 'Learning', gradient: 'from-purple-400 to-indigo-500' },
-        { icon: ShoppingBag, label: 'Shopping', gradient: 'from-green-400 to-emerald-500' },
-        { icon: Award, label: 'Travel', gradient: 'from-orange-400 to-yellow-500' },
-        { icon: AlertTriangle, label: 'Security', gradient: 'from-red-400 to-orange-500' }
+        { id: 'caregiver', icon: Baby, label: 'Family', gradient: 'from-purple-400 to-pink-500' },
+        { id: 'transactional_leader', icon: Briefcase, label: 'Executive', gradient: 'from-slate-400 to-slate-600' },
+        { id: 'sales_hunter', icon: TrendingUp, label: 'Sales', gradient: 'from-blue-400 to-cyan-500' },
+        { id: 'project_coordinator', icon: Calendar, label: 'Projects', gradient: 'from-teal-400 to-cyan-500' },
+        { id: 'enterprise_innovator', icon: Sparkles, label: 'Learning', gradient: 'from-purple-400 to-indigo-500' },
+        { id: 'deal_stacker', icon: ShoppingBag, label: 'Shopping', gradient: 'from-green-400 to-emerald-500' },
+        { id: 'status_seeker', icon: Award, label: 'Travel', gradient: 'from-orange-400 to-yellow-500' },
+        { id: 'identity_manager', icon: AlertTriangle, label: 'Security', gradient: 'from-red-400 to-orange-500' }
       ],
-      action: 'Next'
+      action: 'Next',
+      interactive: true
     },
     {
       title: 'Ready to Swipe! 🚀',
@@ -98,6 +99,19 @@ export const OnboardingTutorial = ({ onComplete }) => {
 
   const currentStepData = steps[currentStep];
   const isLastStep = currentStep === steps.length - 1;
+
+  const toggleArchetype = (archetypeId) => {
+    setSelectedArchetypes(prev => {
+      const isSelected = prev.includes(archetypeId);
+      if (isSelected && prev.length === 1) {
+        // Don't allow deselecting the last archetype
+        return prev;
+      }
+      return isSelected 
+        ? prev.filter(id => id !== archetypeId)
+        : [...prev, archetypeId];
+    });
+  };
 
   const handleNext = () => {
     if (isLastStep) {
@@ -221,14 +235,28 @@ export const OnboardingTutorial = ({ onComplete }) => {
             <div className="grid grid-cols-2 gap-2 mb-4">
               {currentStepData.categories.map((cat, idx) => {
                 const Icon = cat.icon;
+                const isSelected = selectedArchetypes.includes(cat.id);
+                const isInteractive = currentStepData.interactive;
+                
                 return (
-                  <div 
+                  <button
                     key={idx}
-                    className={`bg-gradient-to-br ${cat.gradient} p-3 rounded-xl flex items-center gap-2 shadow-lg`}
+                    onClick={() => isInteractive && toggleArchetype(cat.id)}
+                    disabled={!isInteractive}
+                    className={`p-3 rounded-xl flex items-center gap-2 shadow-lg transition-all ${
+                      isInteractive ? 'cursor-pointer hover:scale-105' : ''
+                    } ${
+                      isSelected 
+                        ? `bg-gradient-to-br ${cat.gradient} opacity-100` 
+                        : 'bg-slate-700 opacity-40 grayscale'
+                    }`}
                   >
                     <Icon size={18} className="text-white" />
                     <span className="text-white font-medium text-sm">{cat.label}</span>
-                  </div>
+                    {isInteractive && isSelected && (
+                      <span className="ml-auto text-white text-xs">✓</span>
+                    )}
+                  </button>
                 );
               })}
             </div>
@@ -262,7 +290,10 @@ export const OnboardingTutorial = ({ onComplete }) => {
             onClick={handleNext}
             className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all duration-300 transform hover:scale-105"
           >
-            {currentStepData.action}
+            {currentStepData.interactive 
+              ? `Continue with ${selectedArchetypes.length} ${selectedArchetypes.length === 1 ? 'category' : 'categories'}`
+              : currentStepData.action
+            }
             {isLastStep ? <Zap size={16} /> : <ArrowRight size={16} />}
           </button>
         </div>
