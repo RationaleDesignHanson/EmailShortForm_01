@@ -578,7 +578,7 @@ const App = () => {
   const [skipTracker, setSkipTracker] = useState({}); // Track skips by sender domain
   const [completedArchetypes, setCompletedArchetypes] = useState([]);
   const [interactionCount, setInteractionCount] = useState(0);
-  const [appBackground, setAppBackground] = useState('linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)');
+  const [appBackground, setAppBackground] = useState(imageGenerator.getEnhancedBackground('caregiver'));
   const [showSplayView, setShowSplayView] = useState(false);
   const [splayFilter, setSplayFilter] = useState(null);
 
