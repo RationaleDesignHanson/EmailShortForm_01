@@ -623,6 +623,9 @@ const App = () => {
     }
   }, [activeType, appState, currentIndex, filteredCards]);
 
+  // Don't auto-mark cards as seen - only when user explicitly swipes right
+  // This was causing all cards to disappear immediately
+  /*
   useEffect(() => {
     if (view === 'feed' && filteredCards[currentIndex]) {
       const card = filteredCards[currentIndex];
@@ -631,6 +634,7 @@ const App = () => {
       }
     }
   }, [currentIndex, view, filteredCards]);
+  */
 
   const switchArchetype = (direction) => {
     const currentIdx = archetypes.indexOf(activeType);
