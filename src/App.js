@@ -585,6 +585,7 @@ const App = () => {
   // Update app background when archetype changes - use imageGenerator for consistency
   React.useEffect(() => {
     const bg = imageGenerator.getEnhancedBackground(activeType);
+    console.log(`🎨 Setting app background for ${activeType}:`, bg);
     setAppBackground(bg);
   }, [activeType]);
   const [showSnoozePicker, setShowSnoozePicker] = useState(false);
