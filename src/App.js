@@ -633,9 +633,10 @@ const App = () => {
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
   
   // Load selected archetypes from sessionStorage (resets on refresh)
+  // Default: Family and Shopping only
   const [selectedArchetypes, setSelectedArchetypes] = useState(() => {
     const saved = sessionStorage.getItem('selectedArchetypes');
-    return saved ? JSON.parse(saved) : archetypes;
+    return saved ? JSON.parse(saved) : ['caregiver', 'deal_stacker'];
   });
 
   // Save to sessionStorage whenever selection changes
