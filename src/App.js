@@ -145,19 +145,29 @@ const ShoppingActionModal = ({ card, onComplete, onCancel }) => {
         </div>
 
         <div className="p-6 space-y-4 overflow-y-auto max-h-[60vh]">
-          <div className="bg-slate-800 border border-slate-700 rounded-xl p-5">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="text-6xl">{card.productImage}</div>
-              <div className="flex-1">
-                <h3 className="text-white text-xl font-bold mb-1">{card.title}</h3>
-                <p className="text-slate-400 text-sm">{card.store}</p>
+          <div className="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
+            {/* Product Image */}
+            {card.productImage && (
+              <img 
+                src={`https://source.unsplash.com/800x400/?${card.productImage}`}
+                alt={card.title}
+                className="w-full h-48 object-cover"
+              />
+            )}
+            <div className="p-5">
+              <div className="mb-3">
+                {card.brandName && (
+                  <div className="text-slate-400 text-sm font-semibold mb-1">{card.brandName}</div>
+                )}
+                <h3 className="text-white text-xl font-bold mb-1">{card.productName || card.title}</h3>
+                <p className="text-slate-500 text-sm">{card.store}</p>
               </div>
-            </div>
-            <div className="flex items-baseline gap-3 mb-3">
-              <div className="text-white text-4xl font-bold">${card.salePrice}</div>
-              <div className="text-slate-400 text-xl line-through">${card.originalPrice}</div>
-              <div className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                {card.discount}% OFF
+              <div className="flex items-baseline gap-3">
+                <div className="text-white text-4xl font-bold">${card.salePrice}</div>
+                <div className="text-slate-400 text-xl line-through">${card.originalPrice}</div>
+                <div className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                  {card.discount}% OFF
+                </div>
               </div>
             </div>
           </div>
@@ -399,9 +409,9 @@ const generateInitialCards = () => {
     { id: 'cc2', type: 'caregiver', state: 'unseen', priority: 'high', hpa: 'Acknowledge', kid: { name: 'Max Rodriguez', initial: 'M', grade: '6th Grade' }, timeAgo: getTimeAgo(0, 5), title: 'Assignment Past Due - Math Homework', summary: 'Homework from last week not submitted, submit by Friday for partial credit', metaCTA: 'Swipe Right: Acknowledge & Confirm', dataSources: [{ subject: 'Missing Assignment Alert', from: 'Mr. Thompson', date: getTimeAgo(0, 5) }] },
 
     // C2: Savvy Deal Stacker
-    { id: 'ds1', type: 'deal_stacker', state: 'unseen', priority: 'high', hpa: 'Claim Deal', store: 'TechMart', timeAgo: getTimeAgo(0, 1), title: 'Flash Sale: Premium Headphones', productImage: 'Headphones', aiBackground: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', originalPrice: 299.99, salePrice: 149.99, discount: 50, urgent: true, expiresIn: '6 hours', metaCTA: 'Swipe Right: Claim Deal Now', promoCode: 'AUDIO50', features: ['50% off', 'Free shipping'], dataSources: [{ subject: 'FLASH SALE', from: 'deals@techmart.com', date: getTimeAgo(0, 1) }] },
+    { id: 'ds1', type: 'deal_stacker', state: 'unseen', priority: 'high', hpa: 'Claim Deal', store: 'Best Buy', timeAgo: getTimeAgo(0, 1), title: 'Sony WH-1000XM5 Headphones', productImage: 'sony+headphones+wh1000xm5', brandName: 'Sony', productName: 'WH-1000XM5 Noise Cancelling', aiBackground: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', originalPrice: 399.99, salePrice: 279.99, discount: 30, urgent: true, expiresIn: '6 hours', metaCTA: 'Swipe Right: Claim Deal Now', promoCode: 'AUDIO30', features: ['30% off', 'Free shipping', 'Extended warranty'], dataSources: [{ subject: 'FLASH SALE', from: 'deals@bestbuy.com', date: getTimeAgo(0, 1) }] },
 
-    { id: 'ds2', type: 'deal_stacker', state: 'unseen', priority: 'low', hpa: 'Not Interested', store: 'FashionHub', timeAgo: getTimeAgo(1), title: 'Extra 30% Off Fall Collection', productImage: 'Apparel', aiBackground: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', originalPrice: 120.00, salePrice: 59.99, discount: 50, urgent: false, expiresIn: '3 days', metaCTA: 'Swipe Left: Dismiss', features: ['Stacks with sale', 'Free shipping $50+'], dataSources: [{ subject: 'Fall Sale', from: 'style@fashionhub.com', date: getTimeAgo(1) }] },
+    { id: 'ds2', type: 'deal_stacker', state: 'unseen', priority: 'low', hpa: 'Not Interested', store: 'Nordstrom', timeAgo: getTimeAgo(1), title: 'Designer Dress - Fall Collection', productImage: 'elegant+dress+fashion', brandName: 'Theory', productName: 'Structured Midi Dress', aiBackground: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', originalPrice: 295.00, salePrice: 147.50, discount: 50, urgent: false, expiresIn: '3 days', metaCTA: 'Swipe Left: Dismiss', features: ['50% off', 'Free shipping', 'Free returns'], dataSources: [{ subject: 'Fall Sale', from: 'style@nordstrom.com', date: getTimeAgo(1) }] },
 
     // Add some low priority items to other archetypes
     { id: 'tl3', type: 'transactional_leader', state: 'unseen', priority: 'low', hpa: 'File for Reference', sender: { name: 'IT Updates', initial: 'I' }, timeAgo: getTimeAgo(2), title: 'Monthly Security Report', summary: 'Routine security metrics and system updates for your review', metaCTA: 'Swipe Left: File for Reference', dataSources: [{ subject: 'Security Report', from: 'security@company.com', date: getTimeAgo(2) }] },
@@ -458,11 +468,11 @@ const generateInitialCards = () => {
     { id: 'ei5', type: 'enterprise_innovator', state: 'unseen', priority: 'low', hpa: 'Save for Later', source: { name: 'Harvard Business Review', initials: 'HB' }, timeAgo: getTimeAgo(1), title: 'The Future of Remote Work', summary: 'Research on hybrid team effectiveness and productivity metrics', metaCTA: 'Swipe Left: Save Article', dataSources: [{ subject: 'HBR Newsletter', from: 'newsletter@hbr.org', date: getTimeAgo(1) }] },
 
     // More Shopping (Deal Stacker) emails
-    { id: 'ds3', type: 'deal_stacker', state: 'unseen', priority: 'high', hpa: 'Claim Deal', store: 'KitchenPro', timeAgo: getTimeAgo(0, 2), title: 'Stand Mixer - 45% Off Today Only', productImage: 'Kitchen Mixer', originalPrice: 399.99, salePrice: 219.99, discount: 45, urgent: true, expiresIn: '8 hours', metaCTA: 'Swipe Right: Claim Deal', promoCode: 'KITCHEN45', dataSources: [{ subject: 'Daily Deal', from: 'deals@kitchenpro.com', date: getTimeAgo(0, 2) }] },
+    { id: 'ds3', type: 'deal_stacker', state: 'unseen', priority: 'high', hpa: 'Claim Deal', store: 'Williams Sonoma', timeAgo: getTimeAgo(0, 2), title: 'KitchenAid Artisan Stand Mixer', productImage: 'kitchenaid+stand+mixer', brandName: 'KitchenAid', productName: 'Artisan 5-Qt Stand Mixer', originalPrice: 449.99, salePrice: 279.99, discount: 38, urgent: true, expiresIn: '8 hours', metaCTA: 'Swipe Right: Claim Deal', promoCode: 'KITCHEN38', features: ['38% off', 'Free shipping', '10 colors available'], dataSources: [{ subject: 'Daily Deal', from: 'deals@williams-sonoma.com', date: getTimeAgo(0, 2) }] },
     
-    { id: 'ds4', type: 'deal_stacker', state: 'unseen', priority: 'medium', hpa: 'Consider', store: 'Home Depot', timeAgo: getTimeAgo(0, 4), title: 'Spring Garden Sale - 30% Off', productImage: 'Garden Tools', originalPrice: 89.99, salePrice: 62.99, discount: 30, urgent: false, expiresIn: '5 days', metaCTA: 'Swipe Right: Browse Sale', dataSources: [{ subject: 'Garden Sale', from: 'sales@homedepot.com', date: getTimeAgo(0, 4) }] },
+    { id: 'ds4', type: 'deal_stacker', state: 'unseen', priority: 'medium', hpa: 'Consider', store: 'REI', timeAgo: getTimeAgo(0, 4), title: 'Patagonia Nano Puff Jacket', productImage: 'patagonia+nano+puff+jacket', brandName: 'Patagonia', productName: 'Nano Puff Insulated Jacket', originalPrice: 249.00, salePrice: 174.30, discount: 30, urgent: false, expiresIn: '5 days', metaCTA: 'Swipe Right: Browse Sale', features: ['30% off', 'Free shipping over $50', 'Lifetime guarantee'], dataSources: [{ subject: 'Gear Sale', from: 'sales@rei.com', date: getTimeAgo(0, 4) }] },
     
-    { id: 'ds5', type: 'deal_stacker', state: 'unseen', priority: 'low', hpa: 'Unsubscribe', store: 'Fashion Outlet', timeAgo: getTimeAgo(2), title: 'Weekly Clearance Event', productImage: 'Clothing', originalPrice: 79.99, salePrice: 39.99, discount: 50, urgent: false, expiresIn: '7 days', metaCTA: 'Swipe Left: Not Interested', dataSources: [{ subject: 'Clearance', from: 'sales@fashionoutlet.com', date: getTimeAgo(2) }] },
+    { id: 'ds5', type: 'deal_stacker', state: 'unseen', priority: 'low', hpa: 'Unsubscribe', store: 'Target', timeAgo: getTimeAgo(2), title: 'Apple AirPods Pro (2nd Gen)', productImage: 'apple+airpods+pro', brandName: 'Apple', productName: 'AirPods Pro (2nd Generation)', originalPrice: 249.99, salePrice: 199.99, discount: 20, urgent: false, expiresIn: '7 days', metaCTA: 'Swipe Left: Not Interested', features: ['$50 off', 'Same day delivery', 'AppleCare available'], dataSources: [{ subject: 'Tech Deals', from: 'sales@target.com', date: getTimeAgo(2) }] },
 
     // More Travel (Status Seeker) emails
     { id: 'ss3', type: 'status_seeker', state: 'unseen', priority: 'high', hpa: 'Book Now', airline: 'Hilton Hotels', timeAgo: getTimeAgo(0, 3), title: 'Double Points Promotion', summary: '2X points on all stays booked this week, valid through Q1', metaCTA: 'Swipe Right: Book Stay', dataSources: [{ subject: 'Points Promotion', from: 'hilton@honors.com', date: getTimeAgo(0, 3) }] },
@@ -639,11 +649,12 @@ const App = () => {
       
       const initializeCards = async () => {
         try {
-          const coherentCards = emailAdapter.getFullMockData();
+          // Use the 50 cards defined in this file
+          const coherentCards = generateInitialCards();
           console.log('📧 Loaded coherent cards:', coherentCards?.length || 0, 'emails');
           
           if (!coherentCards || coherentCards.length === 0) {
-            console.error('❌ No cards returned from emailAdapter!');
+            console.error('❌ No cards returned!');
             return;
           }
           
