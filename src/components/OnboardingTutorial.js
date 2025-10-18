@@ -6,19 +6,19 @@ export const OnboardingTutorial = ({ onComplete, selectedArchetypes, setSelected
 
   const steps = [
     {
-      title: 'Welcome to zero! 👋',
+      title: 'Welcome to zero',
       content: 'zero helps you clear your inbox fast. We group emails into 8 simple categories so you can swipe through what matters.',
       icon: <Sparkles className="text-yellow-400" size={48} />,
       action: 'Next'
     },
     {
-      title: 'Meet Sarah Chen 👩‍💼',
+      title: 'Meet Sarah Chen',
       content: "You'll try zero as Sarah — a working parent juggling family, career, and life. These are realistic scenarios you'll recognize.",
-      icon: <div className="text-4xl">👨‍👩‍👧‍👦</div>,
+      icon: <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">SC</div>,
       action: 'Next'
     },
     {
-      title: 'Swipe Gestures 👆',
+      title: 'Swipe Gestures',
       content: '',
       splitScreen: (
         <div className="grid grid-cols-2 gap-4 w-full">
@@ -33,14 +33,14 @@ export const OnboardingTutorial = ({ onComplete, selectedArchetypes, setSelected
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-white/90 text-sm">
                 <ArrowLeft size={16} className="text-purple-300" />
-                <span>💤 Snooze</span>
+                <span>Snooze</span>
               </div>
               <div className="flex items-center gap-2 text-white/90 text-sm">
                 <div className="flex items-center">
                   <ArrowLeft size={16} className="text-purple-300" />
                   <ArrowLeft size={16} className="text-purple-300 -ml-2" />
                 </div>
-                <span>✕ Skip</span>
+                <span>Skip</span>
               </div>
             </div>
           </div>
@@ -56,14 +56,14 @@ export const OnboardingTutorial = ({ onComplete, selectedArchetypes, setSelected
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-white/90 text-sm">
                 <ArrowRight size={16} className="text-green-300" />
-                <span>👁️ Mark Seen</span>
+                <span>Mark Seen</span>
               </div>
               <div className="flex items-center gap-2 text-white/90 text-sm">
                 <div className="flex items-center">
                   <ArrowRight size={16} className="text-green-300" />
                   <ArrowRight size={16} className="text-green-300 -ml-2" />
                 </div>
-                <span>⚡ Take Action</span>
+                <span>Take Action</span>
               </div>
             </div>
           </div>
@@ -73,9 +73,9 @@ export const OnboardingTutorial = ({ onComplete, selectedArchetypes, setSelected
       action: 'Next'
     },
     {
-      title: 'Choose Your Categories 🎯',
+      title: 'Choose Your Categories',
       content: 'Select which types of emails you want to see. You can always change this later:',
-      icon: <div className="text-4xl">🎭</div>,
+      icon: <Sparkles className="text-blue-400" size={48} />,
       categories: [
         { id: 'caregiver', icon: Baby, label: 'Family', gradient: 'from-purple-400 to-pink-500' },
         { id: 'transactional_leader', icon: Briefcase, label: 'Executive', gradient: 'from-slate-400 to-slate-600' },
@@ -90,8 +90,8 @@ export const OnboardingTutorial = ({ onComplete, selectedArchetypes, setSelected
       interactive: true
     },
     {
-      title: 'Ready to Swipe! 🚀',
-      content: "You're all set! Start with Sarah's family emails and see how fast zero helps you get to done.",
+      title: 'Ready to Swipe',
+      content: "You're all set! Start with Sarah's emails and see how fast zero helps you get to done.",
       icon: <CheckCircle className="text-green-400" size={48} />,
       action: 'Get Started'
     }
@@ -298,12 +298,12 @@ export const OnboardingTutorial = ({ onComplete, selectedArchetypes, setSelected
           </button>
         </div>
 
-        {/* Fun Tip */}
-        {currentStep === 2 || currentStep === 3 ? (
-          <div className="mt-6 text-center text-white/50 text-xs">
-            💡 Try the gestures on the demo cards to get a feel for it!
-          </div>
-        ) : null}
+          {/* Fun Tip */}
+          {currentStep === 2 || currentStep === 3 ? (
+            <div className="mt-6 text-center text-white/50 text-xs">
+              Tip: Try the gestures on the demo cards to get a feel for it
+            </div>
+          ) : null}
       </div>
     </div>
   );
