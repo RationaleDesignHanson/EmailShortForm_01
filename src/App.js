@@ -1115,7 +1115,7 @@ const App = () => {
       style={{
         background: appBackground,
         backgroundSize: '120%',
-        animation: 'subtleBackgroundMove 20s ease-in-out infinite',
+        animation: 'subtleBackgroundMove 30s linear infinite alternate',
       }}
     >
       {/* Add keyframes for background animation */}

@@ -112,6 +112,7 @@ export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeActio
       backgroundImage={card.aiBackground}
       isTopCard={isTopCard}
       revealProgress={revealProgress}
+      className="shadow-lg hover:shadow-xl transition-all duration-200"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
@@ -195,6 +196,7 @@ export const EnhancedBusinessCard = ({ card, isSeen, onViewEmail, onCustomizeAct
       backgroundImage={card.aiBackground}
       isTopCard={isTopCard}
       revealProgress={revealProgress}
+      className="shadow-lg hover:shadow-xl transition-all duration-200"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
@@ -298,6 +300,7 @@ export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAct
       backgroundImage={card.aiBackground}
       isTopCard={isTopCard}
       revealProgress={revealProgress}
+      className="shadow-lg hover:shadow-xl transition-all duration-200"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
