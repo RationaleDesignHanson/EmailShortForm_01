@@ -1206,7 +1206,7 @@ const App = () => {
               onTouchEnd={isTopCard ? handleDragEnd : undefined}
             >
               <div className="relative">
-                {(card.type === 'caregiver') && <EnhancedParentCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} isTopCard={isTopCard} revealProgress={nextCardReveal} />}
+                {(card.type === 'caregiver') && <EnhancedParentCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} onSignature={(card) => { setCurrentCard(card); setCurrentAction('Sign & Send'); setShowActionModule(true); }} isTopCard={isTopCard} revealProgress={nextCardReveal} />}
                 
                 {(card.type === 'sales_hunter' || card.type === 'transactional_leader' || card.type === 'project_coordinator' || card.type === 'enterprise_innovator' || card.type === 'identity_manager') && <EnhancedBusinessCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} isTopCard={isTopCard} revealProgress={nextCardReveal} />}
                 
