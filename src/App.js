@@ -111,6 +111,9 @@ const generateReply = (card) => {
 
 const ShoppingActionModal = ({ card, onComplete, onCancel }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  
+  // Use pre-cached productImageUrl from card data (instant loading!)
+  const productImageUrl = card.productImageUrl || `https://source.unsplash.com/800x400/?${encodeURIComponent(card.productImage)}`;
 
   const handleProceedToStore = () => {
     setIsProcessing(true);
@@ -149,15 +152,15 @@ const ShoppingActionModal = ({ card, onComplete, onCancel }) => {
             {/* Product Image */}
             {card.productImage && (
               <div className="w-full h-48 bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center overflow-hidden">
-                <img 
-                  src={`https://source.unsplash.com/800x400/?${encodeURIComponent(card.productImage)}`}
-                  alt={card.title}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    // Fallback to gradient background with product name
-                    e.target.style.display = 'none';
-                  }}
-                />
+                {productImageUrl ? (
+                  <img 
+                    src={productImageUrl}
+                    alt={card.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="text-slate-500 animate-pulse">Loading product image...</div>
+                )}
               </div>
             )}
             <div className="p-5">
@@ -410,19 +413,19 @@ const generateInitialCards = () => {
     { id: 'ei2', type: 'enterprise_innovator', state: 'unseen', priority: 'high', hpa: 'Express Interest', source: { name: 'Innovation Labs', initials: 'IL' }, timeAgo: getTimeAgo(0, 6), title: 'Partnership Opportunity - Stanford Research', summary: 'Joint research proposal on next-gen ML applications', metaCTA: 'Swipe Right: Express Interest', dataSources: [{ subject: 'Partnership Inquiry', from: 'labs@stanford.edu', date: getTimeAgo(0, 6) }] },
 
     // C1: Time-Crunched Caregiver
-    { id: 'cc1', type: 'caregiver', state: 'unseen', priority: 'critical', hpa: 'Sign & Send', kid: { name: 'Sophie Martinez', initial: 'S', grade: '3rd Grade' }, timeAgo: getTimeAgo(0, 2), title: 'Field Trip Permission - Due Wednesday', summary: 'Museum visit Friday requires signed form by Wed 5 PM', metaCTA: 'Swipe Right: Quick Sign & Send', requiresSignature: true, formFields: [{ label: 'Student Name', autoFillValue: 'Sophie Martinez' }, { label: 'Parent/Guardian', autoFillValue: 'Parent Name' }, { label: 'Emergency Contact', autoFillValue: '(555) 123-4567' }], dataSources: [{ subject: 'Field Trip Permission', from: 'Mrs. Anderson', date: getTimeAgo(0, 2) }] },
+    { id: 'cc1', type: 'caregiver', state: 'unseen', priority: 'critical', hpa: 'Sign & Send', kid: { name: 'Emma Chen', initial: 'E', grade: '3rd Grade' }, timeAgo: getTimeAgo(0, 2), title: 'Field Trip Permission - Due Wednesday', summary: 'Museum visit Friday requires signed form by Wed 5 PM', metaCTA: 'Swipe Right: Quick Sign & Send', requiresSignature: true, formFields: [{ label: 'Student Name', autoFillValue: 'Emma Chen' }, { label: 'Parent/Guardian', autoFillValue: 'Sarah Chen' }, { label: 'Emergency Contact', autoFillValue: '(555) 123-4567' }], dataSources: [{ subject: 'Field Trip Permission', from: 'Mrs. Anderson', date: getTimeAgo(0, 2) }] },
 
-    { id: 'cc2', type: 'caregiver', state: 'unseen', priority: 'high', hpa: 'Acknowledge', kid: { name: 'Max Rodriguez', initial: 'M', grade: '6th Grade' }, timeAgo: getTimeAgo(0, 5), title: 'Assignment Past Due - Math Homework', summary: 'Homework from last week not submitted, submit by Friday for partial credit', metaCTA: 'Swipe Right: Acknowledge & Confirm', dataSources: [{ subject: 'Missing Assignment Alert', from: 'Mr. Thompson', date: getTimeAgo(0, 5) }] },
+    { id: 'cc2', type: 'caregiver', state: 'unseen', priority: 'high', hpa: 'Acknowledge', kid: { name: 'Lucas Chen', initial: 'L', grade: '7th Grade' }, timeAgo: getTimeAgo(0, 5), title: 'Assignment Past Due - Math Homework', summary: 'Homework from last week not submitted, submit by Friday for partial credit', metaCTA: 'Swipe Right: Acknowledge & Confirm', dataSources: [{ subject: 'Missing Assignment Alert', from: 'Mr. Thompson', date: getTimeAgo(0, 5) }] },
 
     // C2: Savvy Deal Stacker
-    { id: 'ds1', type: 'deal_stacker', state: 'unseen', priority: 'high', hpa: 'Claim Deal', store: 'Best Buy', timeAgo: getTimeAgo(0, 1), title: 'Sony WH-1000XM5 Headphones', productImage: 'sony+headphones+wh1000xm5', brandName: 'Sony', productName: 'WH-1000XM5 Noise Cancelling', aiBackground: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', originalPrice: 399.99, salePrice: 279.99, discount: 30, urgent: true, expiresIn: '6 hours', metaCTA: 'Swipe Right: Claim Deal Now', promoCode: 'AUDIO30', features: ['30% off', 'Free shipping', 'Extended warranty'], dataSources: [{ subject: 'FLASH SALE', from: 'deals@bestbuy.com', date: getTimeAgo(0, 1) }] },
+    { id: 'ds1', type: 'deal_stacker', state: 'unseen', priority: 'high', hpa: 'Claim Deal', store: 'Best Buy', timeAgo: getTimeAgo(0, 1), title: 'Sony WH-1000XM5 Headphones', productImage: 'sony+headphones+wh1000xm5', productImageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=400&fit=crop', brandName: 'Sony', productName: 'WH-1000XM5 Noise Cancelling', aiBackground: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', originalPrice: 399.99, salePrice: 279.99, discount: 30, urgent: true, expiresIn: '6 hours', metaCTA: 'Swipe Right: Claim Deal Now', promoCode: 'AUDIO30', features: ['30% off', 'Free shipping', 'Extended warranty'], dataSources: [{ subject: 'FLASH SALE', from: 'deals@bestbuy.com', date: getTimeAgo(0, 1) }] },
 
-    { id: 'ds2', type: 'deal_stacker', state: 'unseen', priority: 'low', hpa: 'Not Interested', store: 'Nordstrom', timeAgo: getTimeAgo(1), title: 'Designer Dress - Fall Collection', productImage: 'elegant+dress+fashion', brandName: 'Theory', productName: 'Structured Midi Dress', aiBackground: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', originalPrice: 295.00, salePrice: 147.50, discount: 50, urgent: false, expiresIn: '3 days', metaCTA: 'Swipe Left: Dismiss', features: ['50% off', 'Free shipping', 'Free returns'], dataSources: [{ subject: 'Fall Sale', from: 'style@nordstrom.com', date: getTimeAgo(1) }] },
+    { id: 'ds2', type: 'deal_stacker', state: 'unseen', priority: 'low', hpa: 'Not Interested', store: 'Nordstrom', timeAgo: getTimeAgo(1), title: 'Designer Dress - Fall Collection', productImage: 'elegant+dress+fashion', productImageUrl: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&h=400&fit=crop', brandName: 'Theory', productName: 'Structured Midi Dress', aiBackground: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', originalPrice: 295.00, salePrice: 147.50, discount: 50, urgent: false, expiresIn: '3 days', metaCTA: 'Swipe Left: Dismiss', features: ['50% off', 'Free shipping', 'Free returns'], dataSources: [{ subject: 'Fall Sale', from: 'style@nordstrom.com', date: getTimeAgo(1) }] },
 
     // Add some low priority items to other archetypes
     { id: 'tl3', type: 'transactional_leader', state: 'unseen', priority: 'low', hpa: 'File for Reference', sender: { name: 'IT Updates', initial: 'I' }, timeAgo: getTimeAgo(2), title: 'Monthly Security Report', summary: 'Routine security metrics and system updates for your review', metaCTA: 'Swipe Left: File for Reference', dataSources: [{ subject: 'Security Report', from: 'security@company.com', date: getTimeAgo(2) }] },
 
-    { id: 'cc3', type: 'caregiver', state: 'unseen', priority: 'low', hpa: 'Archive', kid: { name: 'Sophie Martinez', initial: 'S', grade: '3rd Grade' }, timeAgo: getTimeAgo(3), title: 'Weekly Newsletter', summary: 'School newsletter with upcoming events and general announcements', metaCTA: 'Swipe Left: Archive', dataSources: [{ subject: 'Weekly Newsletter', from: 'newsletter@school.edu', date: getTimeAgo(3) }] },
+    { id: 'cc3', type: 'caregiver', state: 'unseen', priority: 'low', hpa: 'Archive', kid: { name: 'Emma Chen', initial: 'E', grade: '3rd Grade' }, timeAgo: getTimeAgo(3), title: 'Riverside Elementary Newsletter', summary: 'School newsletter with upcoming events and general announcements', metaCTA: 'Swipe Left: Archive', dataSources: [{ subject: 'Weekly Newsletter', from: 'Mrs. Anderson', date: getTimeAgo(3) }] },
 
     // C3: Global Status Seeker
     { id: 'ss1', type: 'status_seeker', state: 'unseen', priority: 'critical', hpa: 'Check In Now', airline: 'United Airlines', timeAgo: getTimeAgo(0, 1), title: 'Flight Check-in Available - SFO to NYC', summary: 'Check in now for tomorrow\'s 6:45 AM departure, upgrade available', metaCTA: 'Swipe Right: Check In & Upgrade', flightDetails: { number: 'UA 1234', from: 'SFO', to: 'JFK', date: 'Tomorrow 6:45 AM' }, dataSources: [{ subject: 'Check-in Available', from: 'united@airlines.com', date: getTimeAgo(0, 1) }] },
@@ -474,11 +477,11 @@ const generateInitialCards = () => {
     { id: 'ei5', type: 'enterprise_innovator', state: 'unseen', priority: 'low', hpa: 'Save for Later', source: { name: 'Harvard Business Review', initials: 'HB' }, timeAgo: getTimeAgo(1), title: 'The Future of Remote Work', summary: 'Research on hybrid team effectiveness and productivity metrics', metaCTA: 'Swipe Left: Save Article', dataSources: [{ subject: 'HBR Newsletter', from: 'newsletter@hbr.org', date: getTimeAgo(1) }] },
 
     // More Shopping (Deal Stacker) emails
-    { id: 'ds3', type: 'deal_stacker', state: 'unseen', priority: 'high', hpa: 'Claim Deal', store: 'Williams Sonoma', timeAgo: getTimeAgo(0, 2), title: 'KitchenAid Artisan Stand Mixer', productImage: 'kitchenaid+stand+mixer', brandName: 'KitchenAid', productName: 'Artisan 5-Qt Stand Mixer', originalPrice: 449.99, salePrice: 279.99, discount: 38, urgent: true, expiresIn: '8 hours', metaCTA: 'Swipe Right: Claim Deal', promoCode: 'KITCHEN38', features: ['38% off', 'Free shipping', '10 colors available'], dataSources: [{ subject: 'Daily Deal', from: 'deals@williams-sonoma.com', date: getTimeAgo(0, 2) }] },
+    { id: 'ds3', type: 'deal_stacker', state: 'unseen', priority: 'high', hpa: 'Claim Deal', store: 'Williams Sonoma', timeAgo: getTimeAgo(0, 2), title: 'KitchenAid Artisan Stand Mixer', productImage: 'kitchenaid+stand+mixer', productImageUrl: 'https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=800&h=400&fit=crop', brandName: 'KitchenAid', productName: 'Artisan 5-Qt Stand Mixer', originalPrice: 449.99, salePrice: 279.99, discount: 38, urgent: true, expiresIn: '8 hours', metaCTA: 'Swipe Right: Claim Deal', promoCode: 'KITCHEN38', features: ['38% off', 'Free shipping', '10 colors available'], dataSources: [{ subject: 'Daily Deal', from: 'deals@williams-sonoma.com', date: getTimeAgo(0, 2) }] },
     
-    { id: 'ds4', type: 'deal_stacker', state: 'unseen', priority: 'medium', hpa: 'Consider', store: 'REI', timeAgo: getTimeAgo(0, 4), title: 'Patagonia Nano Puff Jacket', productImage: 'patagonia+nano+puff+jacket', brandName: 'Patagonia', productName: 'Nano Puff Insulated Jacket', originalPrice: 249.00, salePrice: 174.30, discount: 30, urgent: false, expiresIn: '5 days', metaCTA: 'Swipe Right: Browse Sale', features: ['30% off', 'Free shipping over $50', 'Lifetime guarantee'], dataSources: [{ subject: 'Gear Sale', from: 'sales@rei.com', date: getTimeAgo(0, 4) }] },
+    { id: 'ds4', type: 'deal_stacker', state: 'unseen', priority: 'medium', hpa: 'Consider', store: 'REI', timeAgo: getTimeAgo(0, 4), title: 'Patagonia Nano Puff Jacket', productImage: 'patagonia+nano+puff+jacket', productImageUrl: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=800&h=400&fit=crop', brandName: 'Patagonia', productName: 'Nano Puff Insulated Jacket', originalPrice: 249.00, salePrice: 174.30, discount: 30, urgent: false, expiresIn: '5 days', metaCTA: 'Swipe Right: Browse Sale', features: ['30% off', 'Free shipping over $50', 'Lifetime guarantee'], dataSources: [{ subject: 'Gear Sale', from: 'sales@rei.com', date: getTimeAgo(0, 4) }] },
     
-    { id: 'ds5', type: 'deal_stacker', state: 'unseen', priority: 'low', hpa: 'Unsubscribe', store: 'Target', timeAgo: getTimeAgo(2), title: 'Apple AirPods Pro (2nd Gen)', productImage: 'apple+airpods+pro', brandName: 'Apple', productName: 'AirPods Pro (2nd Generation)', originalPrice: 249.99, salePrice: 199.99, discount: 20, urgent: false, expiresIn: '7 days', metaCTA: 'Swipe Left: Not Interested', features: ['$50 off', 'Same day delivery', 'AppleCare available'], dataSources: [{ subject: 'Tech Deals', from: 'sales@target.com', date: getTimeAgo(2) }] },
+    { id: 'ds5', type: 'deal_stacker', state: 'unseen', priority: 'low', hpa: 'Unsubscribe', store: 'Target', timeAgo: getTimeAgo(2), title: 'Apple AirPods Pro (2nd Gen)', productImage: 'apple+airpods+pro', productImageUrl: 'https://images.unsplash.com/photo-1606841837239-c5a1a4a07af7?w=800&h=400&fit=crop', brandName: 'Apple', productName: 'AirPods Pro (2nd Generation)', originalPrice: 249.99, salePrice: 199.99, discount: 20, urgent: false, expiresIn: '7 days', metaCTA: 'Swipe Left: Not Interested', features: ['$50 off', 'Same day delivery', 'AppleCare available'], dataSources: [{ subject: 'Tech Deals', from: 'sales@target.com', date: getTimeAgo(2) }] },
 
     // More Travel (Status Seeker) emails
     { id: 'ss3', type: 'status_seeker', state: 'unseen', priority: 'high', hpa: 'Book Now', airline: 'Hilton Hotels', timeAgo: getTimeAgo(0, 3), title: 'Double Points Promotion', summary: '2X points on all stays booked this week, valid through Q1', metaCTA: 'Swipe Right: Book Stay', dataSources: [{ subject: 'Points Promotion', from: 'hilton@honors.com', date: getTimeAgo(0, 3) }] },

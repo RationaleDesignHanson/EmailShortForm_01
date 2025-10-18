@@ -6,6 +6,58 @@ class ImageGenerator {
     this.apiKey = process.env.REACT_APP_GEMINI_API_KEY || 'AIzaSyA0rMQ31xJPOXXVEzlyP3_nLFvpV_-dQu4';
   }
 
+  // Generate product image using Gemini (with caching)
+  async generateProductImage(productDescription, brandName) {
+    const cacheKey = `product-${productDescription}-${brandName}`;
+    
+    // Check cache first
+    if (this.cache.has(cacheKey)) {
+      console.log(`✅ Using cached product image for ${brandName}`);
+      return this.cache.get(cacheKey);
+    }
+
+    try {
+      const prompt = `Professional product photography of ${brandName} ${productDescription}, clean white background, studio lighting, high quality, centered, commercial photography style`;
+      
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${this.apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{ text: prompt }]
+            }],
+            generationConfig: {
+              temperature: 0.4,
+              topK: 32,
+              topP: 1,
+              maxOutputTokens: 2048,
+            }
+          })
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const imageUrl = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        if (imageUrl) {
+          console.log(`🎨 Generated product image for ${brandName}`);
+          this.cache.set(cacheKey, imageUrl);
+          return imageUrl;
+        }
+      }
+    } catch (error) {
+      console.log(`⚠️ Gemini unavailable for ${brandName}, using Unsplash fallback`);
+    }
+
+    // Fallback to Unsplash
+    const fallbackUrl = `https://source.unsplash.com/800x400/?${encodeURIComponent(productDescription)}`;
+    this.cache.set(cacheKey, fallbackUrl);
+    return fallbackUrl;
+  }
+
   // Generate colored gradient for card (always use gradients for cards)
   async generateBackground(email) {
     const cacheKey = `gradient-${email.type}-${email.priority}-${email.id}`;
