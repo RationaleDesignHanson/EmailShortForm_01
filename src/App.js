@@ -8,7 +8,7 @@ import { FullEmailView } from './components/FullEmailView';
 import { ActionCustomizer } from './components/ActionCustomizer';
 import { SaveLaterModal } from './components/SaveLaterModal';
 import { UnsubscribeModal } from './components/UnsubscribeModal';
-import { ProgressCounter } from './components/ProgressCounter';
+import { UnifiedBottomNav } from './components/UnifiedBottomNav';
 import { CelebrationScreen } from './components/CelebrationScreen';
 import { SplashScreen } from './components/SplashScreen';
 import { OnboardingTutorial } from './components/OnboardingTutorial';
@@ -544,14 +544,14 @@ const App = () => {
 
   // Archetype configs for naming
   const configs = {
-    transactional_leader: { title: 'Executive Inbox' },
-    sales_hunter: { title: 'Job (Sales)' },
-    project_coordinator: { title: 'Project Hub' },
-    enterprise_innovator: { title: 'Learning Feed' },
+    transactional_leader: { title: 'Executive' },
+    sales_hunter: { title: 'Sales' },
+    project_coordinator: { title: 'Projects' },
+    enterprise_innovator: { title: 'Learning' },
     caregiver: { title: 'Family' },
-    deal_stacker: { title: 'Deals Inbox' },
-    status_seeker: { title: 'Travel Hub' },
-    identity_manager: { title: 'Security Center' }
+    deal_stacker: { title: 'Deals' },
+    status_seeker: { title: 'Travel' },
+    identity_manager: { title: 'Security' }
   };
 
   const SNAP_THRESHOLD = 200;
@@ -1075,16 +1075,14 @@ const App = () => {
       {/* Subtle vignette for depth (doesn't block photos) */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30" />
 
-      {/* Global Progress Counter */}
-      <ProgressCounter 
-        totalEmails={totalEmails} 
-        processedEmails={processedEmails} 
-        currentArchetype={activeType}
+      {/* Unified Bottom Navigation */}
+      <UnifiedBottomNav 
         archetypeName={splayFilter ? splayFilter.name : (configs[activeType]?.title || 'Unknown')}
-        onOpenBottomSheet={() => setShowBottomSheet(true)}
-        onOpenSplayView={handleOpenSplayView}
+        emailsLeft={filteredCards.length}
         onPrevArchetype={() => switchArchetype('prev')}
         onNextArchetype={() => switchArchetype('next')}
+        onOpenSplay={handleOpenSplayView}
+        onOpenBottomSheet={() => setShowBottomSheet(true)}
       />
 
       {/* Modals */}
