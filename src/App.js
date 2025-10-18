@@ -1262,7 +1262,7 @@ const App = () => {
                 
                 {(card.type === 'sales_hunter' || card.type === 'transactional_leader' || card.type === 'project_coordinator' || card.type === 'enterprise_innovator' || card.type === 'identity_manager') && <EnhancedBusinessCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} isTopCard={isTopCard} revealProgress={nextCardReveal} />}
                 
-                {(card.type === 'deal_stacker' || card.type === 'status_seeker') && <EnhancedShoppingCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} isTopCard={isTopCard} revealProgress={nextCardReveal} />}
+                {(card.type === 'deal_stacker' || card.type === 'status_seeker') && <EnhancedShoppingCard card={card} isSeen={card.state !== 'unseen'} onViewEmail={() => { setCurrentCard(card); setShowFullEmail(true); }} onCustomizeAction={handleCustomizeAction} onProductClick={(card) => { setCurrentCard(card); setShowShoppingModal(true); }} isTopCard={isTopCard} revealProgress={nextCardReveal} />}
 
                 {isTopCard && isHorizontal && Math.abs(dragOffset.x) > 50 && (
                   <SwipeActionOverlay direction={dragOffset.x > 0 ? 'right' : 'left'} cardType={card.type} swipeDistance={dragOffset.x} />
