@@ -1107,9 +1107,9 @@ const App = () => {
           // Orderly stack with slight misalignment
           const isTopCard = index === currentIndex;
           
-          // Debug: Log top card info
-          if (isTopCard && index > 0) {
-            console.log(`🎴 Card ${index} is now TOP CARD (currentIndex: ${currentIndex})`);
+          // Debug: Log ALL top cards to track advancement
+          if (isTopCard) {
+            console.log(`🎴 Rendering card ${index} as TOP CARD (currentIndex: ${currentIndex}, card.id: ${card.id})`);
           }
           
           const rotation = isDragging && index === currentIndex 
