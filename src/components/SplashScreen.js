@@ -9,21 +9,12 @@ export const SplashScreen = ({ onEnter }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError('');
-
-    // Check password
     if (password === '111111') {
-      setTimeout(() => {
-        onEnter();
-      }, 1000);
+      onEnter();
     } else {
-      setTimeout(() => {
-        setError('Incorrect password. Try 111111');
-        setIsLoading(false);
-      }, 800);
+      setError('');  // Just clear the error
     }
-  };
+  }
 
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center overflow-hidden">
