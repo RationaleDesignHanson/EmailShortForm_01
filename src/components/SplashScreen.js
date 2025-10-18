@@ -69,9 +69,8 @@ export const SplashScreen = ({ onEnter }) => {
           </p>
         </div>
 
-        {/* Demo Badge */}
+        {/* Remove Demo Badge */}
         <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 mb-8 border border-white/20">
-          <div className="text-white/90 font-semibold mb-2">🎭 Demo Experience</div>
           <div className="text-white/70 text-sm">
             You're <strong>Sarah Chen</strong>, a working mom managing life through zero's smart, short-form email app.
           </div>
