@@ -753,8 +753,11 @@ const App = () => {
   const moveToNext = () => {
     setTimeout(() => {
       if (currentIndex < filteredCards.length - 1) {
-        setCurrentIndex(prev => prev + 1);
+        const newIndex = currentIndex + 1;
+        console.log(`➡️ Moving to next card: ${currentIndex} → ${newIndex}`);
+        setCurrentIndex(newIndex);
       } else {
+        console.log('✅ Last card in archetype - switching to next');
         switchArchetype('next');
       }
     }, 300);
@@ -1103,6 +1106,12 @@ const App = () => {
           
           // Orderly stack with slight misalignment
           const isTopCard = index === currentIndex;
+          
+          // Debug: Log top card info
+          if (isTopCard && index > 0) {
+            console.log(`🎴 Card ${index} is now TOP CARD (currentIndex: ${currentIndex})`);
+          }
+          
           const rotation = isDragging && index === currentIndex 
             ? (dragOffset.x / 30) 
             : (!isTopCard ? (index % 3 === 0 ? -2 : index % 3 === 1 ? 1.5 : -1) : 0); // 2-3 degree variations
