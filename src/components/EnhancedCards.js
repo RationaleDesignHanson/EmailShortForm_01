@@ -100,7 +100,7 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
   );
 };
 
-export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true, revealProgress = 0 }) => {
+export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true, revealProgress = 0, onSignature }) => {
   const displayInfo = card.kid || card.sender || { name: 'User', initial: 'U' };
   
   return (
@@ -165,13 +165,17 @@ export const EnhancedParentCard = ({ card, isSeen, onViewEmail, onCustomizeActio
         <p className="text-white/95 text-base leading-relaxed" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>{card.summary}</p>
 
         {card.requiresSignature && (
-          <div className="bg-white/20 backdrop-blur-md rounded-xl p-3 flex items-center gap-3 border border-white/30">
+          <button
+            onClick={() => onSignature && onSignature(card)}
+            className="w-full bg-white/20 backdrop-blur-md rounded-xl p-3 flex items-center gap-3 border border-white/30 hover:bg-white/30 hover:border-white/50 transition-all cursor-pointer"
+          >
             <FileText className="text-white" size={20} />
-            <div>
+            <div className="text-left flex-1">
               <div className="text-white font-semibold text-sm">Signature Required</div>
-              <div className="text-white/80 text-xs">Auto-fill ready</div>
+              <div className="text-white/80 text-xs">Tap to sign form</div>
             </div>
-          </div>
+            <div className="text-white/60 text-xs">→</div>
+          </button>
         )}
       </div>
     </EnhancedCard>
@@ -274,9 +278,16 @@ export const EnhancedBusinessCard = ({ card, isSeen, onViewEmail, onCustomizeAct
   );
 };
 
-export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true, revealProgress = 0 }) => {
+export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAction, isTopCard = true, revealProgress = 0, onProductClick, onPromoClick }) => {
   const storeName = card.store || card.airline || card.service || 'Store';
   const showPricing = card.salePrice && card.originalPrice;
+  
+  const handleCopyPromo = () => {
+    if (card.promoCode) {
+      navigator.clipboard.writeText(card.promoCode);
+      alert(`Promo code ${card.promoCode} copied!`);
+    }
+  };
   
   return (
     <EnhancedCard 
@@ -324,22 +335,33 @@ export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAct
       {/* Content */}
       <div className="space-y-3">
         {card.productImage && (
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/30 mb-3">
+          <button
+            onClick={() => onProductClick && onProductClick(card)}
+            className="w-full bg-white/10 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/30 mb-3 hover:border-white/50 transition-all cursor-pointer group"
+          >
             {/* Product image from Unsplash */}
-            <img 
-              src={`https://source.unsplash.com/400x300/?${card.productImage.toLowerCase()}`}
-              alt={card.productImage}
-              className="w-full h-48 object-cover opacity-90"
-              onError={(e) => {
-                // Fallback to emoji if image fails to load
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
-              }}
-            />
-            <div className="hidden bg-white/10 backdrop-blur-xl p-6 h-48 items-center justify-center">
-              <div className="text-white text-4xl">{card.productImage}</div>
+            <div className="relative">
+              <img 
+                src={`https://source.unsplash.com/400x300/?${card.productImage.toLowerCase()}`}
+                alt={card.productImage}
+                className="w-full h-48 object-cover opacity-90 group-hover:opacity-100 transition-opacity"
+                onError={(e) => {
+                  // Fallback to emoji if image fails to load
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+              <div className="hidden bg-white/10 backdrop-blur-xl p-6 h-48 items-center justify-center">
+                <div className="text-white text-4xl">{card.productImage}</div>
+              </div>
+              {/* Hover overlay */}
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity text-white font-semibold">
+                  Tap to view details
+                </div>
+              </div>
             </div>
-          </div>
+          </button>
         )}
 
         <h2 className="text-white text-xl font-bold drop-shadow-lg">{card.title}</h2>
