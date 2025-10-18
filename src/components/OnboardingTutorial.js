@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ArrowRight, ArrowLeft, CheckCircle, X, Zap, Sparkles, Briefcase, TrendingUp, Calendar, Baby, ShoppingBag, Award, AlertTriangle } from 'lucide-react';
-import { EnhancedCard } from './EnhancedCards';
 
 export const OnboardingTutorial = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -120,7 +119,7 @@ export const OnboardingTutorial = ({ onComplete }) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <EnhancedCard className="bg-gradient-to-br from-blue-800 via-indigo-500 to-purple-800 p-8 rounded-3xl shadow-xl">
+      <div className="w-full max-w-2xl bg-gradient-to-br from-blue-800 via-indigo-500 to-purple-800 p-8 rounded-3xl shadow-2xl">
         {/* Skip Button */}
         <button
           onClick={handleSkip}
@@ -230,7 +229,7 @@ export const OnboardingTutorial = ({ onComplete }) => {
             💡 Try the gestures on the demo cards to get a feel for it!
           </div>
         ) : null}
-      </EnhancedCard>
+      </div>
     </div>
   );
 };
