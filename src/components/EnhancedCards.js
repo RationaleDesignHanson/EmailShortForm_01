@@ -345,23 +345,16 @@ export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAct
             className="w-full bg-white/10 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/30 mb-3 hover:border-white/50 transition-all cursor-pointer group"
           >
             {/* Product image from Unsplash */}
-            <div className="relative">
+            <div className="relative h-48 bg-slate-700">
               <img 
-                src={`https://source.unsplash.com/400x300/?${card.productImage.toLowerCase()}`}
-                alt={card.productImage}
-                className="w-full h-48 object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                onError={(e) => {
-                  // Fallback to emoji if image fails to load
-                  e.target.style.display = 'none';
-                  e.target.nextSibling.style.display = 'flex';
-                }}
+                src={`https://source.unsplash.com/400x300/?${card.productImage}`}
+                alt={card.title}
+                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
+                loading="lazy"
               />
-              <div className="hidden bg-white/10 backdrop-blur-xl p-6 h-48 items-center justify-center">
-                <div className="text-white text-4xl">{card.productImage}</div>
-              </div>
               {/* Hover overlay */}
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity text-white font-semibold">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity text-white font-semibold drop-shadow-lg">
                   Tap to view details
                 </div>
               </div>
