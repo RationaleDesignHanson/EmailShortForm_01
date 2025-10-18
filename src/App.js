@@ -539,8 +539,8 @@ const App = () => {
     filteredCards = filteredCards.filter(splayFilter.filter);
   }
   
-  // Debug logging
-  console.log(`📊 Total cards: ${cards.length}, Filtered for ${activeType}: ${filteredCards.length}`);
+  // Debug logging (only log when count changes)
+  // console.log(`📊 Total cards: ${cards.length}, Filtered for ${activeType}: ${filteredCards.length}`);
 
   // Archetype configs for naming
   const configs = {
@@ -752,12 +752,25 @@ const App = () => {
 
   const moveToNext = () => {
     setTimeout(() => {
-      if (currentIndex < filteredCards.length - 1) {
+      // Use the CURRENT filteredCards length at time of execution
+      const currentFilteredLength = cards.filter(c => 
+        c.type === activeType && 
+        c.state !== 'dismissed' && 
+        c.state !== 'deleted' && 
+        c.state !== 'archived' && 
+        c.state !== 'seen' &&
+        c.state !== 'snoozed'
+      ).length;
+      
+      console.log(`➡️ CurrentIndex: ${currentIndex}, FilteredCards: ${currentFilteredLength}`);
+      
+      if (currentIndex < currentFilteredLength - 1) {
         const newIndex = currentIndex + 1;
-        console.log(`➡️ Moving to next card: ${currentIndex} → ${newIndex}`);
+        console.log(`   Moving to card ${newIndex}`);
         setCurrentIndex(newIndex);
       } else {
-        console.log('✅ Last card in archetype - switching to next');
+        console.log('   Last card - switching archetype');
+        setCurrentIndex(0);
         switchArchetype('next');
       }
     }, 300);
