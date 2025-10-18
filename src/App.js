@@ -911,6 +911,9 @@ const App = () => {
 
   // App State Handlers
   const handleSplashComplete = () => {
+    // Reset archetype selection on new session
+    sessionStorage.removeItem('selectedArchetypes');
+    setSelectedArchetypes(['caregiver', 'deal_stacker']); // Family and Shopping only
     setAppState('onboarding');
   };
 
