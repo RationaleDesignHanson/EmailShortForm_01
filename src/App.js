@@ -1068,10 +1068,18 @@ const App = () => {
       className="w-full h-screen relative overflow-hidden"
       style={{
         background: appBackground,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundSize: '120%',
+        animation: 'subtleBackgroundMove 20s ease-in-out infinite',
       }}
     >
+      {/* Add keyframes for background animation */}
+      <style>{`
+        @keyframes subtleBackgroundMove {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+      `}</style>
+      
       {/* Subtle vignette for depth (doesn't block photos) */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30" />
 

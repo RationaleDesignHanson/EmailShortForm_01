@@ -324,8 +324,21 @@ export const EnhancedShoppingCard = ({ card, isSeen, onViewEmail, onCustomizeAct
       {/* Content */}
       <div className="space-y-3">
         {card.productImage && (
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/30 text-center">
-            <div className="text-white text-4xl font-bold mb-2">{card.productImage}</div>
+          <div className="bg-white/10 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/30 mb-3">
+            {/* Product image from Unsplash */}
+            <img 
+              src={`https://source.unsplash.com/400x300/?${card.productImage.toLowerCase()}`}
+              alt={card.productImage}
+              className="w-full h-48 object-cover opacity-90"
+              onError={(e) => {
+                // Fallback to emoji if image fails to load
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+            <div className="hidden bg-white/10 backdrop-blur-xl p-6 h-48 items-center justify-center">
+              <div className="text-white text-4xl">{card.productImage}</div>
+            </div>
           </div>
         )}
 
