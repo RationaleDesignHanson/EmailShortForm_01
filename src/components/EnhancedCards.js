@@ -21,15 +21,15 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
         <div 
           className={`absolute inset-0 ${
             isTopCard 
-              ? 'backdrop-blur-3xl' 
+              ? 'backdrop-blur-2xl' 
               : 'backdrop-blur-3xl'
           }`}
           style={{
             backgroundColor: isTopCard 
-              ? 'rgba(255, 255, 255, 0.08)' 
+              ? 'rgba(255, 255, 255, 0.03)' 
               : `rgba(0, 0, 0, ${0.50 - (revealProgress * 0.3)})`,  // 0.50 to 0.20 as swipe progresses
-            backdropFilter: isTopCard ? 'blur(40px) saturate(180%)' : 'blur(60px) saturate(120%)',
-            WebkitBackdropFilter: isTopCard ? 'blur(40px) saturate(180%)' : 'blur(60px) saturate(120%)',
+            backdropFilter: isTopCard ? 'blur(30px) saturate(150%)' : 'blur(60px) saturate(120%)',
+            WebkitBackdropFilter: isTopCard ? 'blur(30px) saturate(150%)' : 'blur(60px) saturate(120%)',
           }}
         />
 
