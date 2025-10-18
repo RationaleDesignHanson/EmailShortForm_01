@@ -632,7 +632,7 @@ const App = () => {
 
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
   
-  // Apply splay filter if active - exclude actioned, seen, snoozed, dismissed cards
+  // Apply splay filter if active - exclude actioned, seen, snoozed, dismissed, replied cards
   let filteredCards = cards.filter(c => 
     c.type === activeType && 
     c.state !== 'dismissed' && 
@@ -640,7 +640,8 @@ const App = () => {
     c.state !== 'archived' && 
     c.state !== 'seen' &&
     c.state !== 'snoozed' &&
-    c.state !== 'actioned'
+    c.state !== 'actioned' &&
+    c.state !== 'replied'
   );
   if (splayFilter) {
     filteredCards = filteredCards.filter(splayFilter.filter);
@@ -768,6 +769,12 @@ const App = () => {
         // Shopping/Travel cards use their robust dedicated modals
         if (card.type === 'deal_stacker' || card.type === 'status_seeker') {
           setShowShoppingModal(true);
+          return;
+        }
+        
+        // Email-based actions use ReplyComposer
+        if (card.hpa.includes('Acknowledge') || card.hpa.includes('Respond') || card.hpa.includes('Follow Up') || card.hpa.includes('Confirm')) {
+          setShowComposer(true);
           return;
         }
         
@@ -977,6 +984,10 @@ const App = () => {
 
     const action = currentAction;
 
+    // Email-based actions use ReplyComposer
+    if (action.includes('Acknowledge') || action.includes('Respond') || action.includes('Follow Up') || action.includes('Confirm')) {
+      return null; // Will be handled by showComposer
+    }
     if (action.includes('Review') || action.includes('Approve')) {
       return <ReviewApproveModal card={currentCard} onComplete={handleActionComplete} onCancel={() => { setShowActionModule(false); setCurrentCard(null); setCurrentAction(null); }} />;
     }
