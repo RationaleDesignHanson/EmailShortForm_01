@@ -291,7 +291,7 @@ export const OnboardingTutorial = ({ onComplete, selectedArchetypes, setSelected
             className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all duration-300 transform hover:scale-105"
           >
             {currentStepData.interactive 
-              ? `Continue with ${selectedArchetypes.length} ${selectedArchetypes.length === 1 ? 'category' : 'categories'}`
+              ? `Continue with ${selectedArchetypes.length}`
               : currentStepData.action
             }
             {isLastStep ? <Zap size={16} /> : <ArrowRight size={16} />}
