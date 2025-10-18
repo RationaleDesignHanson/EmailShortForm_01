@@ -991,7 +991,7 @@ const App = () => {
     if (action.includes('Review') || action.includes('Approve')) {
       return <ReviewApproveModal card={currentCard} onComplete={handleActionComplete} onCancel={() => { setShowActionModule(false); setCurrentCard(null); setCurrentAction(null); }} />;
     }
-    if (action.includes('Calendar') || action.includes('Add to')) {
+    if (action.includes('Calendar') || action.includes('Add to') || action.includes('Browse & Order')) {
       return <AddToCalendarModal card={currentCard} onComplete={handleActionComplete} onCancel={() => { setShowActionModule(false); setCurrentCard(null); setCurrentAction(null); }} />;
     }
     if (action.includes('Sign')) {
