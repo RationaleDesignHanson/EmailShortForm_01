@@ -77,7 +77,7 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
           >
             <div className="flex items-center justify-between">
               <div className="flex-1 text-center">
-                <div className="text-white text-sm font-bold drop-shadow-lg">{card.metaCTA}</div>
+                <div className="text-white text-sm font-bold drop-shadow-lg">{card.metaCTA || 'No Action Available'}</div>
               </div>
               {isTopCard && (
                 <button 
