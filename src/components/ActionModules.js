@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Check, Calendar, FileText, Send, CreditCard, Folder, Users } from 'lucide-react';
+import { X, Check, Calendar, FileText, Send, CreditCard, Folder, Users, ShoppingBag } from 'lucide-react';
 
 // Universal action modal wrapper
 const ActionModal = ({ title, icon: Icon, children, onClose }) => (
@@ -89,10 +89,48 @@ export const ReviewApproveModal = ({ card, onComplete, onCancel }) => {
   );
 };
 
-// 2. Add to Calendar Module
+// 2. Add to Calendar Module (with smart supply detection)
 export const AddToCalendarModal = ({ card, onComplete, onCancel }) => {
-  const handleAddToCalendar = () => {
+  const [selectedSupplies, setSelectedSupplies] = useState([]);
+  
+  // Smart detection: Does this card mention supplies?
+  const needsSupplies = card.summary?.toLowerCase().includes('supplies') || 
+                        card.summary?.toLowerCase().includes('poster board') ||
+                        card.title?.toLowerCase().includes('supplies');
+  
+  // Auto-suggest relevant supplies based on context
+  const suggestedSupplies = needsSupplies ? [
+    { 
+      id: 's1',
+      name: 'Poster Board 3-Pack', 
+      price: 12.99,
+      image: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=400&q=80',
+      store: 'Amazon Prime'
+    },
+    { 
+      id: 's2',
+      name: 'Crayola Markers 24-Count', 
+      price: 8.99,
+      image: 'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&w=400&q=80',
+      store: 'Amazon Prime'
+    }
+  ] : [];
+
+  const toggleSupply = (supplyId) => {
+    setSelectedSupplies(prev => 
+      prev.includes(supplyId) ? prev.filter(id => id !== supplyId) : [...prev, supplyId]
+    );
+  };
+
+  const totalSupplyCost = suggestedSupplies
+    .filter(s => selectedSupplies.includes(s.id))
+    .reduce((sum, s) => sum + s.price, 0);
+
+  const handleComplete = () => {
     console.log(`Added to calendar: ${card.title}`);
+    if (selectedSupplies.length > 0) {
+      console.log(`Ordered supplies: ${selectedSupplies.length} items ($${totalSupplyCost.toFixed(2)})`);
+    }
     onComplete();
   };
 
@@ -104,28 +142,80 @@ export const AddToCalendarModal = ({ card, onComplete, onCancel }) => {
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
             <span className="text-slate-400">When:</span>
-            <span className="text-white">TBD (from email)</span>
+            <span className="text-white">Monday 6:00 PM</span>
           </div>
           <div className="flex justify-between">
             <span className="text-slate-400">Duration:</span>
             <span className="text-white">1 hour</span>
           </div>
-          {card.dataSources?.[0]?.from && (
+          {card.kid && (
             <div className="flex justify-between">
-              <span className="text-slate-400">With:</span>
-              <span className="text-white">{card.dataSources[0].from}</span>
+              <span className="text-slate-400">For:</span>
+              <span className="text-white">{card.kid.name}</span>
             </div>
           )}
         </div>
       </div>
 
-      {/* Add to Calendar Button */}
+      {/* Smart Supply Detection */}
+      {needsSupplies && suggestedSupplies.length > 0 && (
+        <div className="mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <ShoppingBag className="text-green-400" size={20} />
+            <h4 className="text-white font-semibold">Supplies Needed</h4>
+          </div>
+          <div className="space-y-2">
+            {suggestedSupplies.map(supply => (
+              <button
+                key={supply.id}
+                onClick={() => toggleSupply(supply.id)}
+                className={`w-full bg-slate-800 border-2 rounded-xl overflow-hidden transition-all ${
+                  selectedSupplies.includes(supply.id)
+                    ? 'border-green-500'
+                    : 'border-slate-700 hover:border-slate-600'
+                }`}
+              >
+                <div className="flex items-center gap-3 p-3">
+                  <img 
+                    src={supply.image}
+                    alt={supply.name}
+                    className="w-16 h-16 object-cover rounded-lg"
+                  />
+                  <div className="flex-1 text-left">
+                    <div className="text-white font-medium text-sm">{supply.name}</div>
+                    <div className="text-slate-400 text-xs">{supply.store}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-white font-bold">${supply.price}</div>
+                    {selectedSupplies.includes(supply.id) && (
+                      <div className="text-green-400 text-xs">✓ Added</div>
+                    )}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+          {selectedSupplies.length > 0 && (
+            <div className="mt-3 bg-green-600/20 border border-green-500/50 rounded-xl p-3">
+              <div className="flex justify-between items-center">
+                <span className="text-white font-semibold">Total</span>
+                <span className="text-white text-xl font-bold">${totalSupplyCost.toFixed(2)}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Action Button */}
       <button
-        onClick={handleAddToCalendar}
+        onClick={handleComplete}
         className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300"
       >
         <Calendar size={20} />
-        Add to Calendar
+        {selectedSupplies.length > 0 
+          ? `Add to Calendar & Order Supplies ($${totalSupplyCost.toFixed(2)})`
+          : 'Add to Calendar'
+        }
       </button>
     </ActionModal>
   );
