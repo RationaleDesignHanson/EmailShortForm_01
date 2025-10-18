@@ -297,13 +297,6 @@ export const OnboardingTutorial = ({ onComplete, selectedArchetypes, setSelected
             {isLastStep ? <Zap size={16} /> : <ArrowRight size={16} />}
           </button>
         </div>
-
-          {/* Fun Tip */}
-          {currentStep === 2 || currentStep === 3 ? (
-            <div className="mt-6 text-center text-white/50 text-xs">
-              Tip: Try the gestures on the demo cards to get a feel for it
-            </div>
-          ) : null}
       </div>
     </div>
   );
