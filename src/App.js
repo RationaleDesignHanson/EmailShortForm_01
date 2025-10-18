@@ -16,6 +16,7 @@ import { SplayView } from './components/SplayView';
 import { SnoozePickerModal } from './components/SnoozePickerModal';
 import { ReviewApproveModal, AddToCalendarModal, SignFormModal, ScheduleMeetingModal, RouteToCRMModal, GenericActionModal } from './components/ActionModules';
 import emailAdapter from './services/emailAdapter';
+import soundEffects from './utils/soundEffects';
 
 // Priority Meter Component (liquid glass style)
 const PriorityMeter = ({ level, label }) => {
@@ -593,6 +594,7 @@ const App = () => {
   const [hasSetSnoozeDuration, setHasSetSnoozeDuration] = useState(false); // Track if user set preference
   const [showActionModule, setShowActionModule] = useState(false);
   const [currentAction, setCurrentAction] = useState(null);
+  const [flashFeedback, setFlashFeedback] = useState(null); // For visual feedback
 
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
   
@@ -1022,6 +1024,7 @@ const App = () => {
       if (navigator.vibrate) {
         navigator.vibrate([50, 20, 50]); // STRONGEST pattern for hard swipe
       }
+      soundEffects.threshold(); // Audio feedback
     }
 
     setDragOffset({ x: offsetX, y: offsetY });
@@ -1041,6 +1044,21 @@ const App = () => {
           navigator.vibrate(40); // Strong single pulse for quick actions
         }
       }
+      
+      // Visual feedback for all devices (fallback for iOS)
+      setFlashFeedback(dragOffset.x > 0 ? 'right' : 'left');
+      setTimeout(() => setFlashFeedback(null), 300);
+      
+      // Sound feedback
+      if (dragOffset.x > 0) {
+        soundEffects.swipeRight();
+      } else {
+        soundEffects.swipeLeft();
+      }
+      if (isLongSwipe) {
+        setTimeout(() => soundEffects.actionComplete(), 100);
+      }
+      
       handleSwipeAction(dragOffset.x > 0 ? 'right' : 'left', isLongSwipe);
     } else if (!isHorizontal && Math.abs(dragOffset.y) > 100) {
       if (dragOffset.y < 0) {
@@ -1179,6 +1197,25 @@ const App = () => {
       
       {/* Subtle vignette for depth (doesn't block photos) */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30" />
+      
+      {/* Visual feedback flash (iOS fallback) */}
+      {flashFeedback && (
+        <div 
+          className={`absolute inset-0 pointer-events-none transition-opacity duration-300 ${
+            flashFeedback === 'right' 
+              ? 'bg-green-500/20' 
+              : 'bg-purple-500/20'
+          }`}
+          style={{ animation: 'flash 300ms ease-out' }}
+        />
+      )}
+      <style>{`
+        @keyframes flash {
+          0% { opacity: 0; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.02); }
+          100% { opacity: 0; transform: scale(1); }
+        }
+      `}</style>
 
       {/* Unified Bottom Navigation */}
       <UnifiedBottomNav 
