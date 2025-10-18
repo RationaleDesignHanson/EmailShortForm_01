@@ -14,6 +14,7 @@ import { SplashScreen } from './components/SplashScreen';
 import { OnboardingTutorial } from './components/OnboardingTutorial';
 import { SplayView } from './components/SplayView';
 import { SnoozePickerModal } from './components/SnoozePickerModal';
+import { ReviewApproveModal, AddToCalendarModal, SignFormModal, ScheduleMeetingModal, RouteToCRMModal, GenericActionModal } from './components/ActionModules';
 import emailAdapter from './services/emailAdapter';
 
 // Priority Meter Component (liquid glass style)
@@ -523,6 +524,8 @@ const App = () => {
   const [showSnoozePicker, setShowSnoozePicker] = useState(false);
   const [snoozeDuration, setSnoozeDuration] = useState(1); // Default 1 hour
   const [hasSetSnoozeDuration, setHasSetSnoozeDuration] = useState(false); // Track if user set preference
+  const [showActionModule, setShowActionModule] = useState(false);
+  const [currentAction, setCurrentAction] = useState(null);
 
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
   
@@ -669,16 +672,11 @@ const App = () => {
 
     if (direction === 'right') {
       if (isLong) {
-        // Long right = Action Modal (for complex actions)
-        if (card.type === 'deal_stacker' || card.type === 'status_seeker') {
-          setCurrentCard(card);
-          setShowShoppingModal(true);
-          return;
-        } else {
-          setCurrentCard(card);
-          setShowComposer(true);
-          return;
-        }
+        // Long right = Action Modal (route based on card's action)
+        setCurrentCard(card);
+        setCurrentAction(card.hpa);
+        setShowActionModule(true);
+        return;
       } else {
         // Short right = Mark as Seen (removes from pile)
         newState = 'seen';
@@ -852,6 +850,53 @@ const App = () => {
     setShowSaveLater(false);
     setCurrentCard(null);
     moveToNext();
+  };
+
+  const handleActionComplete = () => {
+    if (currentCard) {
+      setCards(prev => prev.map(c => 
+        c.id === currentCard.id ? { ...c, state: 'actioned' } : c
+      ));
+      
+      setLastAction({
+        cardId: currentCard.id,
+        previousState: currentCard.state,
+        action: `⚡ ${currentAction} completed`
+      });
+      
+      setShowUndo(true);
+      setTimeout(() => setShowUndo(false), 3000);
+    }
+    setShowActionModule(false);
+    setCurrentCard(null);
+    setCurrentAction(null);
+    // Don't call moveToNext - card already removed by state change
+  };
+
+  // Route to correct action module based on action name
+  const renderActionModule = () => {
+    if (!showActionModule || !currentCard || !currentAction) return null;
+
+    const action = currentAction;
+
+    if (action.includes('Review') || action.includes('Approve')) {
+      return <ReviewApproveModal card={currentCard} onComplete={handleActionComplete} onCancel={() => { setShowActionModule(false); setCurrentCard(null); setCurrentAction(null); }} />;
+    }
+    if (action.includes('Calendar') || action.includes('Add to')) {
+      return <AddToCalendarModal card={currentCard} onComplete={handleActionComplete} onCancel={() => { setShowActionModule(false); setCurrentCard(null); setCurrentAction(null); }} />;
+    }
+    if (action.includes('Sign')) {
+      return <SignFormModal card={currentCard} onComplete={handleActionComplete} onCancel={() => { setShowActionModule(false); setCurrentCard(null); setCurrentAction(null); }} />;
+    }
+    if (action.includes('Schedule') || action.includes('Meeting')) {
+      return <ScheduleMeetingModal card={currentCard} onComplete={handleActionComplete} onCancel={() => { setShowActionModule(false); setCurrentCard(null); setCurrentAction(null); }} />;
+    }
+    if (action.includes('CRM') || action.includes('Route')) {
+      return <RouteToCRMModal card={currentCard} onComplete={handleActionComplete} onCancel={() => { setShowActionModule(false); setCurrentCard(null); setCurrentAction(null); }} />;
+    }
+
+    // Generic fallback for any other action
+    return <GenericActionModal action={action} card={currentCard} onComplete={handleActionComplete} onCancel={() => { setShowActionModule(false); setCurrentCard(null); setCurrentAction(null); }} />;
   };
 
   const handleSnooze = (hours, remember) => {
@@ -1094,6 +1139,7 @@ const App = () => {
       />
 
       {/* Modals */}
+      {renderActionModule()}
       {showComposer && currentCard && <ReplyComposer card={currentCard} onSend={handleSendReply} onCancel={() => { setShowComposer(false); setCurrentCard(null); }} />}
       {showShoppingModal && currentCard && <ShoppingActionModal card={currentCard} onComplete={handleShoppingComplete} onCancel={() => { setShowShoppingModal(false); setCurrentCard(null); }} />}
       {showBottomSheet && <BottomSheet isOpen={showBottomSheet} onClose={() => setShowBottomSheet(false)} activeArchetype={activeType} onArchetypeChange={setActiveType} cards={cards} currentEmail={filteredCards[currentIndex]} />}
