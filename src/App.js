@@ -522,6 +522,7 @@ const App = () => {
   const [splayFilter, setSplayFilter] = useState(null);
   const [showSnoozePicker, setShowSnoozePicker] = useState(false);
   const [snoozeDuration, setSnoozeDuration] = useState(1); // Default 1 hour
+  const [hasSetSnoozeDuration, setHasSetSnoozeDuration] = useState(false); // Track if user set preference
 
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
   
@@ -674,10 +675,34 @@ const App = () => {
           }
         }
       } else {
-        // Short left = Snooze (show picker modal)
-        setCurrentCard(card);
-        setShowSnoozePicker(true);
-        return;
+        // Short left = Snooze
+        if (!hasSetSnoozeDuration) {
+          // First time - show picker modal
+          setCurrentCard(card);
+          setShowSnoozePicker(true);
+          return;
+        } else {
+          // Use remembered duration - snooze immediately
+          const snoozeUntil = new Date(Date.now() + snoozeDuration * 60 * 60 * 1000);
+          newState = 'snoozed';
+          actionLabel = `💤 Snoozed for ${snoozeDuration < 1 ? snoozeDuration * 60 + ' min' : snoozeDuration + 'h'}`;
+          
+          setCards(prev => prev.map(c => 
+            c.id === card.id ? { ...c, state: 'snoozed', snoozeUntil } : c
+          ));
+          
+          setLastAction({
+            cardId: card.id,
+            previousState: card.state,
+            action: actionLabel
+          });
+          
+          setShowUndo(true);
+          setTimeout(() => setShowUndo(false), 3000);
+          
+          moveToNext();
+          return;
+        }
       }
     }
 
@@ -795,8 +820,10 @@ const App = () => {
         c.id === currentCard.id ? { ...c, state: 'snoozed', snoozeUntil } : c
       ));
       
+      // Save duration preference
+      setSnoozeDuration(hours);
       if (remember) {
-        setSnoozeDuration(hours);
+        setHasSetSnoozeDuration(true); // Don't show picker again
       }
       
       setLastAction({

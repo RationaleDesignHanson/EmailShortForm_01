@@ -23,29 +23,56 @@ class ImageGenerator {
     return enhancedBackground;
   }
 
-  // Generate photographic background for app (behind cards)
+  // Generate enhanced contextual gradient for app background
   async generatePhotographicBackground(email) {
-    const cacheKey = `photo-${email.type}-${email.id}`;
+    const cacheKey = `bg-${email.type}-${email.id}`;
     
     // Check cache first
     if (this.cache.has(cacheKey)) {
       return this.cache.get(cacheKey);
     }
 
-    try {
-      const imageUrl = await this.generateGeminiImage(email);
-      if (imageUrl) {
-        this.cache.set(cacheKey, imageUrl);
-        return imageUrl;
-      }
-    } catch (error) {
-      console.error('Photo generation error, using fallback:', error);
+    // Use rich, contextual gradient backgrounds (Option A)
+    const enhancedGradient = this.getContextualGradient(email);
+    console.log(`🎨 App background for ${email.type}:`, enhancedGradient);
+    
+    this.cache.set(cacheKey, enhancedGradient);
+    return enhancedGradient;
+  }
+
+  // Get contextual gradient with texture based on email content
+  getContextualGradient(email) {
+    const title = (email.title || '').toLowerCase();
+    const summary = (email.summary || '').toLowerCase();
+    const combined = title + ' ' + summary;
+
+    // Content-specific gradients with subtle texture
+    if (combined.includes('field trip') || combined.includes('museum')) {
+      return 'radial-gradient(ellipse at top, #fef3c7 0%, #fcd34d 20%, #a78bfa 60%, #8b5cf6 100%)'; // Sunny museum
+    }
+    if (combined.includes('conference') || combined.includes('teacher')) {
+      return 'linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 30%, #a78bfa 60%, #8b5cf6 100%)'; // School meeting
+    }
+    if (combined.includes('birthday') || combined.includes('party')) {
+      return 'radial-gradient(circle at center, #fce7f3 0%, #fbcfe8 20%, #f9a8d4 50%, #ec4899 100%)'; // Celebration
+    }
+    
+    if (combined.includes('contract') || combined.includes('deal')) {
+      return 'linear-gradient(135deg, #dbeafe 0%, #93c5fd 30%, #3b82f6 60%, #1d4ed8 100%)'; // Business blue
+    }
+    if (combined.includes('camera') || combined.includes('photo')) {
+      return 'radial-gradient(ellipse at bottom, #1e293b 0%, #475569 40%, #94a3b8 80%, #cbd5e1 100%)'; // Studio lighting
+    }
+    if (combined.includes('flight') || combined.includes('airport')) {
+      return 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 30%, #0ea5e9 60%, #0369a1 100%)'; // Sky blue travel
+    }
+    
+    if (combined.includes('security') || combined.includes('password')) {
+      return 'radial-gradient(circle at top right, #fecaca 0%, #fca5a5 30%, #f87171 60%, #dc2626 100%)'; // Alert red
     }
 
-    // Fallback to gradient if photo generation fails
-    const gradient = this.getEnhancedBackground(email.type, email.priority);
-    this.cache.set(cacheKey, gradient);
-    return gradient;
+    // Fallback to archetype gradient
+    return this.getEnhancedBackground(email.type, email.priority);
   }
 
   // Generate image using Gemini Imagen API or fallback to Picsum
