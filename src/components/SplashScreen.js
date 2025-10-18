@@ -62,9 +62,14 @@ export const SplashScreen = ({ onEnter }) => {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-xl text-white/80 mb-8 leading-relaxed">
-          Clear your inbox fast. Swipe to keep, act, or archive for later.
-        </p>
+        <div className="mb-8">
+          <p className="text-2xl font-bold text-white mb-2">
+            Clear your inbox fast.
+          </p>
+          <p className="text-lg text-white/80">
+            Swipe to keep, act, or archive for later.
+          </p>
+        </div>
 
         {/* Demo Badge */}
         <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 mb-8 border border-white/20">
