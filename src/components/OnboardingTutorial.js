@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, ArrowLeft, Eye, CheckCircle, X, Zap, Sparkles } from 'lucide-react';
+import { ArrowRight, ArrowLeft, CheckCircle, X, Zap, Sparkles, Briefcase, TrendingUp, Calendar, Baby, ShoppingBag, Award, AlertTriangle } from 'lucide-react';
 
 export const OnboardingTutorial = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -18,23 +18,32 @@ export const OnboardingTutorial = ({ onComplete }) => {
       action: 'Continue'
     },
     {
-      title: 'Swipe Right: Take Action 👉',
-      content: 'Short swipe right = Mark as seen\nLong swipe right = Take immediate action\n\nUse this for emails that need your attention or response.',
-      icon: <ArrowRight className="text-green-400" size={48} />,
-      gesture: '👁️ Seen  •  ⚡ Action',
+      title: 'Swipe Gestures 👆',
+      content: '👉 Right: Mark as seen or take action\n👈 Left: Snooze or skip\n\nShort swipes are safe. Long swipes take bigger actions.',
+      icon: (
+        <div className="flex items-center gap-8">
+          <ArrowRight className="text-green-400" size={40} />
+          <div className="text-2xl">•</div>
+          <ArrowLeft className="text-purple-400" size={40} />
+        </div>
+      ),
+      gesture: '👁️ Seen  •  💤 Snooze  •  ⚡ Action  •  ✕ Skip',
       action: 'Got It'
     },
     {
-      title: 'Swipe Left: Organize 👈',
-      content: 'Short swipe left = Mark as done\nLong swipe left = Skip/dismiss\n\nUse this to clear emails or save for later.',
-      icon: <ArrowLeft className="text-blue-400" size={48} />,
-      gesture: '✓ Done  •  ✕ Skip',
-      action: 'Understood'
-    },
-    {
       title: 'Smart Categories 🎯',
-      content: 'zero automatically sorts emails into 8 simple categories:\n• Family & Caregiving\n• Sales & Business\n• Shopping & Deals\n• Travel & Status\n• Security & Identity\n• Executive Leadership\n• Project Coordination\n• Learning & Innovation',
+      content: 'zero automatically sorts emails into 8 simple categories:',
       icon: <div className="text-4xl">🎭</div>,
+      categories: [
+        { icon: Baby, label: 'Family', gradient: 'from-purple-400 to-pink-500' },
+        { icon: Briefcase, label: 'Executive', gradient: 'from-slate-400 to-slate-600' },
+        { icon: TrendingUp, label: 'Sales', gradient: 'from-blue-400 to-cyan-500' },
+        { icon: Calendar, label: 'Projects', gradient: 'from-teal-400 to-cyan-500' },
+        { icon: Sparkles, label: 'Learning', gradient: 'from-purple-400 to-indigo-500' },
+        { icon: ShoppingBag, label: 'Shopping', gradient: 'from-green-400 to-emerald-500' },
+        { icon: Award, label: 'Travel', gradient: 'from-orange-400 to-yellow-500' },
+        { icon: AlertTriangle, label: 'Security', gradient: 'from-red-400 to-orange-500' }
+      ],
       action: 'Explore Categories'
     },
     {
@@ -111,6 +120,24 @@ export const OnboardingTutorial = ({ onComplete }) => {
           <p className="text-white/80 leading-relaxed whitespace-pre-line mb-4">
             {currentStepData.content}
           </p>
+
+          {/* Category Buttons (if present) */}
+          {currentStepData.categories && (
+            <div className="grid grid-cols-2 gap-2 mb-4">
+              {currentStepData.categories.map((cat, idx) => {
+                const Icon = cat.icon;
+                return (
+                  <div 
+                    key={idx}
+                    className={`bg-gradient-to-br ${cat.gradient} p-3 rounded-xl flex items-center gap-2 shadow-lg`}
+                  >
+                    <Icon size={18} className="text-white" />
+                    <span className="text-white font-medium text-sm">{cat.label}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {/* Gesture Indicator */}
           {currentStepData.gesture && (

@@ -526,8 +526,15 @@ const App = () => {
 
   const archetypes = ['caregiver', 'transactional_leader', 'sales_hunter', 'project_coordinator', 'enterprise_innovator', 'deal_stacker', 'status_seeker', 'identity_manager'];
   
-  // Apply splay filter if active
-  let filteredCards = cards.filter(c => c.type === activeType && c.state !== 'dismissed' && c.state !== 'deleted' && c.state !== 'archived');
+  // Apply splay filter if active - exclude seen, snoozed, dismissed cards
+  let filteredCards = cards.filter(c => 
+    c.type === activeType && 
+    c.state !== 'dismissed' && 
+    c.state !== 'deleted' && 
+    c.state !== 'archived' && 
+    c.state !== 'seen' &&
+    c.state !== 'snoozed'
+  );
   if (splayFilter) {
     filteredCards = filteredCards.filter(splayFilter.filter);
   }
@@ -651,9 +658,9 @@ const App = () => {
           return;
         }
       } else {
-        // Short right = Mark as Read (safe action)
-        newState = 'read';
-        actionLabel = '👁️ Marked as Read';
+        // Short right = Mark as Seen (removes from pile)
+        newState = 'seen';
+        actionLabel = '👁️ Marked as Seen';
       }
     } else if (direction === 'left') {
       if (isLong) {
