@@ -1030,23 +1030,23 @@ const App = () => {
       
       if (prevAbsOffsetX < SNAP_THRESHOLD - SNAP_ZONE || prevAbsOffsetX > SNAP_THRESHOLD + SNAP_ZONE) {
         if (navigator.vibrate) {
-          navigator.vibrate(10);
+          navigator.vibrate(30); // Stronger magnetic snap feedback
         }
       }
     }
     
     // Enhanced 2-level haptic feedback
-    // Level 1: Soft swipe threshold (100px) - Light haptic
+    // Level 1: Soft swipe threshold (100px) - Medium haptic
     if (absOffsetX > 100 && prevAbsOffsetX <= 100) {
       if (navigator.vibrate) {
-        navigator.vibrate(8); // Light vibration for soft swipe
+        navigator.vibrate(25); // Medium vibration for soft swipe
       }
     }
-    
-    // Level 2: Hard swipe threshold (200px) - Strong haptic
+
+    // Level 2: Hard swipe threshold (200px) - STRONGEST haptic
     if (absOffsetX > 200 && prevAbsOffsetX <= 200) {
       if (navigator.vibrate) {
-        navigator.vibrate([20, 10, 20]); // Strong pattern for hard swipe
+        navigator.vibrate([50, 20, 50]); // STRONGEST pattern for hard swipe
       }
     }
 
@@ -1059,12 +1059,12 @@ const App = () => {
     const isLongSwipe = Math.abs(dragOffset.x) > 200;
 
     if (isHorizontal && Math.abs(dragOffset.x) > 100) {
-      // Haptic feedback on action confirmation
+      // Haptic feedback on action confirmation - STRONGEST
       if (navigator.vibrate) {
         if (isLongSwipe) {
-          navigator.vibrate([15, 10, 15]);
+          navigator.vibrate([50, 15, 50, 15, 50]); // Triple-pulse for important actions
         } else {
-          navigator.vibrate(20);
+          navigator.vibrate(40); // Strong single pulse for quick actions
         }
       }
       handleSwipeAction(dragOffset.x > 0 ? 'right' : 'left', isLongSwipe);
