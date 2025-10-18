@@ -63,9 +63,12 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
             transition: 'opacity 0.1s ease-out, filter 0.1s ease-out'
           }}
         >
-          {/* Meta CTA with Change button */}
+          {/* Card-specific content */}
+          {children}
+
+          {/* Meta CTA with Change button - moved to bottom */}
           <div 
-            className="rounded-xl p-3 mb-4 border border-white/30 shadow-lg"
+            className="rounded-xl p-3 mt-4 border border-white/30 shadow-lg"
             style={{
               backgroundColor: 'rgba(255, 255, 255, 0.2)',
               backdropFilter: 'blur(20px) saturate(150%)',
@@ -91,9 +94,6 @@ const EnhancedCard = ({ card, isSeen, onViewEmail, onCustomizeAction, children, 
               )}
             </div>
           </div>
-
-          {/* Card-specific content */}
-          {children}
         </div>
       </div>
     </div>
