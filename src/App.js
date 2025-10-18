@@ -148,11 +148,17 @@ const ShoppingActionModal = ({ card, onComplete, onCancel }) => {
           <div className="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
             {/* Product Image */}
             {card.productImage && (
-              <img 
-                src={`https://source.unsplash.com/800x400/?${card.productImage}`}
-                alt={card.title}
-                className="w-full h-48 object-cover"
-              />
+              <div className="w-full h-48 bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center overflow-hidden">
+                <img 
+                  src={`https://source.unsplash.com/800x400/?${encodeURIComponent(card.productImage)}`}
+                  alt={card.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // Fallback to gradient background with product name
+                    e.target.style.display = 'none';
+                  }}
+                />
+              </div>
             )}
             <div className="p-5">
               <div className="mb-3">
@@ -486,7 +492,22 @@ const generateInitialCards = () => {
     
     { id: 'idm4', type: 'identity_manager', state: 'unseen', priority: 'high', hpa: 'Update Password', service: 'Microsoft', timeAgo: getTimeAgo(0, 3), title: 'Password Expiring Soon', summary: 'Your work account password expires in 3 days, update now', metaCTA: 'Swipe Right: Update Password', security: true, dataSources: [{ subject: 'Password Expiration', from: 'admin@microsoft.com', date: getTimeAgo(0, 3) }] },
     
-    { id: 'idm5', type: 'identity_manager', state: 'unseen', priority: 'medium', hpa: 'Review Activity', service: 'Google', timeAgo: getTimeAgo(0, 8), title: 'New Device Added to Account', summary: 'iPad Pro added to your Google account from home network', metaCTA: 'Swipe Right: Confirm Device', security: true, dataSources: [{ subject: 'Security Notification', from: 'no-reply@google.com', date: getTimeAgo(0, 8) }] }
+    { id: 'idm5', type: 'identity_manager', state: 'unseen', priority: 'medium', hpa: 'Review Activity', service: 'Google', timeAgo: getTimeAgo(0, 8), title: 'New Device Added to Account', summary: 'iPad Pro added to your Google account from home network', metaCTA: 'Swipe Right: Confirm Device', security: true, dataSources: [{ subject: 'Security Notification', from: 'no-reply@google.com', date: getTimeAgo(0, 8) }] },
+
+    // Final 7 emails to reach 50 total
+    { id: 'cc8', type: 'caregiver', state: 'unseen', priority: 'medium', hpa: 'RSVP', kid: { name: 'Lucas Chen', initial: 'L', grade: '7th Grade' }, timeAgo: getTimeAgo(0, 9), title: 'Birthday Party Invitation', summary: 'Classmate\'s birthday party Saturday 3 PM, RSVP by Wednesday', metaCTA: 'Swipe Right: RSVP Yes', dataSources: [{ subject: 'Party Invitation', from: 'parent@example.com', date: getTimeAgo(0, 9) }] },
+    
+    { id: 'tl7', type: 'transactional_leader', state: 'unseen', priority: 'low', hpa: 'Read', sender: { name: 'HR Department', initial: 'H' }, timeAgo: getTimeAgo(2), title: 'Open Enrollment Reminder', summary: 'Benefits enrollment period ends next Friday, review options', metaCTA: 'Swipe Right: Review Benefits', dataSources: [{ subject: 'Benefits', from: 'hr@techcorp.com', date: getTimeAgo(2) }] },
+    
+    { id: 'sh6', type: 'sales_hunter', state: 'unseen', priority: 'low', hpa: 'Archive', company: { name: 'Old Lead Co', initials: 'OL' }, value: '$12K', probability: 15, score: 35, timeAgo: getTimeAgo(3), title: 'Stale Lead - No Response', summary: 'Haven\'t heard back in 6 weeks, consider closing', metaCTA: 'Swipe Left: Archive Lead', dataSources: [{ subject: 'Follow-up', from: 'contact@oldlead.com', date: getTimeAgo(3) }] },
+    
+    { id: 'pc6', type: 'project_coordinator', state: 'unseen', priority: 'low', hpa: 'Review', project: { name: 'Documentation', initials: 'DC' }, timeAgo: getTimeAgo(2), title: 'API Docs Updated', summary: 'New endpoint documentation published, review when convenient', metaCTA: 'Swipe Left: Review Later', dataSources: [{ subject: 'Docs Update', from: 'docs@company.com', date: getTimeAgo(2) }] },
+    
+    { id: 'ei6', type: 'enterprise_innovator', state: 'unseen', priority: 'low', hpa: 'Read', source: { name: 'TechCrunch', initials: 'TC' }, timeAgo: getTimeAgo(2), title: 'Weekly Tech Roundup', summary: 'Top 10 tech stories this week, AI breakthroughs and startup news', metaCTA: 'Swipe Left: Save to Read', dataSources: [{ subject: 'Newsletter', from: 'newsletter@techcrunch.com', date: getTimeAgo(2) }] },
+    
+    { id: 'ds6', type: 'deal_stacker', state: 'unseen', priority: 'medium', hpa: 'Browse', store: 'Amazon', timeAgo: getTimeAgo(1), title: 'Daily Deals You Might Like', productImage: 'electronics+gadgets', brandName: 'Amazon', productName: 'Lightning Deals', originalPrice: 0, salePrice: 0, discount: 0, urgent: false, expiresIn: '24 hours', metaCTA: 'Swipe Right: Browse Deals', dataSources: [{ subject: 'Daily Deals', from: 'deals@amazon.com', date: getTimeAgo(1) }] },
+    
+    { id: 'ss6', type: 'status_seeker', state: 'unseen', priority: 'low', hpa: 'Review', airline: 'Amex Travel', timeAgo: getTimeAgo(2), title: 'Exclusive Travel Offers', summary: 'Premium hotel rates and upgrades for cardmembers', metaCTA: 'Swipe Left: Review Later', dataSources: [{ subject: 'Travel Perks', from: 'travel@amex.com', date: getTimeAgo(2) }] }
   ];
 };
 
