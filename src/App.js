@@ -538,6 +538,9 @@ const App = () => {
   if (splayFilter) {
     filteredCards = filteredCards.filter(splayFilter.filter);
   }
+  
+  // Debug logging
+  console.log(`📊 Total cards: ${cards.length}, Filtered for ${activeType}: ${filteredCards.length}`);
 
   // Archetype configs for naming
   const configs = {
@@ -556,24 +559,39 @@ const App = () => {
 
   // Initialize with coherent demo data and generate backgrounds
   useEffect(() => {
-    if (appState === 'feed') {
+    console.log('🔄 App state changed to:', appState);
+    
+    if (appState === 'feed' && cards.length === 0) {
+      console.log('🚀 Initializing cards...');
+      
       const initializeCards = async () => {
-        const coherentCards = emailAdapter.getFullMockData();
-        
-        // Generate AI backgrounds for each card
-        const cardsWithBackgrounds = await Promise.all(
-          coherentCards.map(async (card) => {
-            const aiBackground = await imageGenerator.generateBackground(card);
-            return { ...card, aiBackground };
-          })
-        );
-        
-        setCards(cardsWithBackgrounds);
+        try {
+          const coherentCards = emailAdapter.getFullMockData();
+          console.log('📧 Loaded coherent cards:', coherentCards?.length || 0, 'emails');
+          
+          if (!coherentCards || coherentCards.length === 0) {
+            console.error('❌ No cards returned from emailAdapter!');
+            return;
+          }
+          
+          // Generate AI backgrounds for each card
+          const cardsWithBackgrounds = await Promise.all(
+            coherentCards.map(async (card) => {
+              const aiBackground = await imageGenerator.generateBackground(card);
+              return { ...card, aiBackground };
+            })
+          );
+          
+          console.log('🎨 Cards with backgrounds:', cardsWithBackgrounds.length);
+          setCards(cardsWithBackgrounds);
+        } catch (error) {
+          console.error('❌ Error initializing cards:', error);
+        }
       };
 
       initializeCards();
     }
-  }, [appState]);
+  }, [appState, cards.length]);
 
   // Check for archetype completion and trigger celebration
   useEffect(() => {
