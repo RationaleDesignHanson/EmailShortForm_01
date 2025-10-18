@@ -752,8 +752,12 @@ const App = () => {
 
   const moveToNext = () => {
     setTimeout(() => {
-      // Use the CURRENT filteredCards length at time of execution
-      const currentFilteredLength = cards.filter(c => 
+      // DON'T INCREMENT - when a card is removed, the next card slides into current position
+      // Just stay at currentIndex and let React re-render with the new filtered array
+      console.log(`✅ Card removed - staying at index ${currentIndex}`);
+      
+      // Check if we've run out of cards (will trigger celebration via useEffect)
+      const remainingCards = cards.filter(c => 
         c.type === activeType && 
         c.state !== 'dismissed' && 
         c.state !== 'deleted' && 
@@ -762,16 +766,8 @@ const App = () => {
         c.state !== 'snoozed'
       ).length;
       
-      console.log(`➡️ CurrentIndex: ${currentIndex}, FilteredCards: ${currentFilteredLength}`);
-      
-      if (currentIndex < currentFilteredLength - 1) {
-        const newIndex = currentIndex + 1;
-        console.log(`   Moving to card ${newIndex}`);
-        setCurrentIndex(newIndex);
-      } else {
-        console.log('   Last card - switching archetype');
-        setCurrentIndex(0);
-        switchArchetype('next');
+      if (remainingCards === 0) {
+        console.log('🎉 No more cards in archetype');
       }
     }, 300);
   };
