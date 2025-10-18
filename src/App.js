@@ -675,24 +675,8 @@ const App = () => {
   }, [filteredCards.length, cards.length, activeType, completedArchetypes, appState]);
 
   // Generate photographic app background based on current card content
-  useEffect(() => {
-    const generateAppBackground = async () => {
-      const currentCard = filteredCards[currentIndex];
-      if (currentCard) {
-        // Generate photographic scene related to card content
-        const photoUrl = await imageGenerator.generatePhotographicBackground(currentCard);
-        setAppBackground(`url(${photoUrl})`);
-      } else {
-        // Fallback to archetype scene if no card
-        const photoUrl = await imageGenerator.generatePhotographicBackground({ type: activeType, priority: 'medium', id: 'app-bg' });
-        setAppBackground(`url(${photoUrl})`);
-      }
-    };
-    
-    if (appState === 'feed') {
-      generateAppBackground();
-    }
-  }, [activeType, appState, currentIndex, filteredCards]);
+  // Removed: Photo backgrounds were overriding our archetype gradients
+  // Now using simple gradient backgrounds that match card themes (set in useEffect above)
 
   // Don't auto-mark cards as seen - only when user explicitly swipes right
   // This was causing all cards to disappear immediately
