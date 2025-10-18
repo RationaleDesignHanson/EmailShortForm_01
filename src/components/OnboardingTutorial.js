@@ -9,26 +9,68 @@ export const OnboardingTutorial = ({ onComplete }) => {
       title: 'Welcome to zero! 👋',
       content: 'zero helps you clear your inbox fast. We group emails into 8 simple categories so you can swipe through what matters.',
       icon: <Sparkles className="text-yellow-400" size={48} />,
-      action: 'Get Started'
+      action: 'Next'
     },
     {
       title: 'Meet Sarah Chen 👩‍💼',
       content: "You'll try zero as Sarah — a working parent juggling family, career, and life. These are realistic scenarios you'll recognize.",
       icon: <div className="text-4xl">👨‍👩‍👧‍👦</div>,
-      action: 'Continue'
+      action: 'Next'
     },
     {
       title: 'Swipe Gestures 👆',
-      content: '👉 Right: Mark as seen or take action\n👈 Left: Snooze or skip\n\nShort swipes are safe. Long swipes take bigger actions.',
-      icon: (
-        <div className="flex items-center gap-8">
-          <ArrowRight className="text-green-400" size={40} />
-          <div className="text-2xl">•</div>
-          <ArrowLeft className="text-purple-400" size={40} />
+      content: '',
+      splitScreen: (
+        <div className="grid grid-cols-2 gap-4 w-full">
+          {/* Left Side - Swipe Left Actions */}
+          <div className="bg-purple-500/20 backdrop-blur-md rounded-2xl p-4 border border-purple-400/30">
+            <div className="flex justify-center mb-3">
+              <ArrowLeft className="text-purple-400" size={40} />
+            </div>
+            <div className="text-center mb-4">
+              <div className="text-white font-bold mb-1">Swipe Left</div>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-white/90 text-sm">
+                <ArrowLeft size={16} className="text-purple-300" />
+                <span>💤 Snooze</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90 text-sm">
+                <div className="flex items-center">
+                  <ArrowLeft size={16} className="text-purple-300" />
+                  <ArrowLeft size={16} className="text-purple-300 -ml-2" />
+                </div>
+                <span>✕ Skip</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side - Swipe Right Actions */}
+          <div className="bg-green-500/20 backdrop-blur-md rounded-2xl p-4 border border-green-400/30">
+            <div className="flex justify-center mb-3">
+              <ArrowRight className="text-green-400" size={40} />
+            </div>
+            <div className="text-center mb-4">
+              <div className="text-white font-bold mb-1">Swipe Right</div>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-white/90 text-sm">
+                <ArrowRight size={16} className="text-green-300" />
+                <span>👁️ Mark Seen</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/90 text-sm">
+                <div className="flex items-center">
+                  <ArrowRight size={16} className="text-green-300" />
+                  <ArrowRight size={16} className="text-green-300 -ml-2" />
+                </div>
+                <span>⚡ Take Action</span>
+              </div>
+            </div>
+          </div>
         </div>
       ),
-      gesture: '👁️ Seen  •  💤 Snooze  •  ⚡ Action  •  ✕ Skip',
-      action: 'Got It'
+      gesture: 'Short swipes are safe • Long swipes take bigger actions',
+      action: 'Next'
     },
     {
       title: 'Smart Categories 🎯',
@@ -44,13 +86,13 @@ export const OnboardingTutorial = ({ onComplete }) => {
         { icon: Award, label: 'Travel', gradient: 'from-orange-400 to-yellow-500' },
         { icon: AlertTriangle, label: 'Security', gradient: 'from-red-400 to-orange-500' }
       ],
-      action: 'Explore Categories'
+      action: 'Next'
     },
     {
       title: 'Ready to Swipe! 🚀',
       content: "You're all set! Start with Sarah's family emails and see how fast zero helps you get to done.",
       icon: <CheckCircle className="text-green-400" size={48} />,
-      action: 'Start Swiping'
+      action: 'Get Started'
     }
   ];
 
@@ -117,9 +159,18 @@ export const OnboardingTutorial = ({ onComplete }) => {
           </h2>
 
           {/* Content */}
-          <p className="text-white/80 leading-relaxed whitespace-pre-line mb-4">
-            {currentStepData.content}
-          </p>
+          {currentStepData.content && (
+            <p className="text-white/80 leading-relaxed whitespace-pre-line mb-4">
+              {currentStepData.content}
+            </p>
+          )}
+
+          {/* Split Screen Layout (if present) */}
+          {currentStepData.splitScreen && (
+            <div className="mb-4">
+              {currentStepData.splitScreen}
+            </div>
+          )}
 
           {/* Category Buttons (if present) */}
           {currentStepData.categories && (
