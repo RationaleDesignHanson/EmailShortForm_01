@@ -45,6 +45,13 @@ export const SplashScreen = ({ onEnter }) => {
 
       {/* Main Content */}
       <div className="relative z-10 text-center max-w-md mx-auto p-8">
+        {/* Title */}
+        <h1 className="text-4xl font-bold text-white mb-6 flex items-center justify-center gap-3">
+          <Sparkles className="text-yellow-400" size={32} />
+          zero
+          <Sparkles className="text-yellow-400" size={32} />
+        </h1>
+
         {/* Zero Logo - 10000 with middle 0 active */}
         <div className="mb-8">
           <div className="flex items-center justify-center text-7xl font-bold">
@@ -53,13 +60,6 @@ export const SplashScreen = ({ onEnter }) => {
             <span className="text-white/30">00</span>
           </div>
         </div>
-
-        {/* Title */}
-        <h1 className="text-4xl font-bold text-white mb-4 flex items-center justify-center gap-3">
-          <Sparkles className="text-yellow-400" size={32} />
-          zero
-          <Sparkles className="text-yellow-400" size={32} />
-        </h1>
 
         {/* Subtitle */}
         <div className="mb-8">
