@@ -168,48 +168,80 @@ export const BottomSheet = ({
                         </div>
                         <div className="flex items-center gap-2">
                           {criticalCards.length > 0 && (
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                alert(`${criticalCards.length} Critical Priority Emails\n\nThese emails require immediate attention and action.`);
-                              }}
-                              className="text-red-400 text-sm font-bold hover:bg-red-500/20 px-1 py-0.5 rounded transition-all"
-                            >
-                              {criticalCards.length}
-                            </button>
+                            <div className="relative group">
+                              <button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  alert(`${criticalCards.length} Critical Priority Emails\n\nThese emails require immediate attention and action.`);
+                                }}
+                                className="text-red-400 text-sm font-bold hover:bg-red-500/20 px-1 py-0.5 rounded transition-all"
+                              >
+                                {criticalCards.length}
+                              </button>
+                              {/* Hover tooltip */}
+                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-red-600 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl">
+                                <div className="font-bold">{criticalCards.length} Critical</div>
+                                <div className="text-red-100">Immediate attention</div>
+                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-red-600"></div>
+                              </div>
+                            </div>
                           )}
                           {highCards.length > 0 && (
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                alert(`${highCards.length} High Priority Emails\n\nThese emails are important and should be addressed soon.`);
-                              }}
-                              className="text-orange-400 text-sm font-bold hover:bg-orange-500/20 px-1 py-0.5 rounded transition-all"
-                            >
-                              {highCards.length}
-                            </button>
+                            <div className="relative group">
+                              <button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  alert(`${highCards.length} High Priority Emails\n\nThese emails are important and should be addressed soon.`);
+                                }}
+                                className="text-orange-400 text-sm font-bold hover:bg-orange-500/20 px-1 py-0.5 rounded transition-all"
+                              >
+                                {highCards.length}
+                              </button>
+                              {/* Hover tooltip */}
+                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-orange-600 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl">
+                                <div className="font-bold">{highCards.length} High Priority</div>
+                                <div className="text-orange-100">Address soon</div>
+                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-orange-600"></div>
+                              </div>
+                            </div>
                           )}
                           {mediumCards.length > 0 && (
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                alert(`${mediumCards.length} Medium Priority Emails\n\nThese emails can be handled when convenient.`);
-                              }}
-                              className="text-yellow-400 text-sm font-bold hover:bg-yellow-500/20 px-1 py-0.5 rounded transition-all"
-                            >
-                              {mediumCards.length}
-                            </button>
+                            <div className="relative group">
+                              <button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  alert(`${mediumCards.length} Medium Priority Emails\n\nThese emails can be handled when convenient.`);
+                                }}
+                                className="text-yellow-400 text-sm font-bold hover:bg-yellow-500/20 px-1 py-0.5 rounded transition-all"
+                              >
+                                {mediumCards.length}
+                              </button>
+                              {/* Hover tooltip */}
+                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-yellow-600 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl">
+                                <div className="font-bold">{mediumCards.length} Medium</div>
+                                <div className="text-yellow-100">Handle when ready</div>
+                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-yellow-600"></div>
+                              </div>
+                            </div>
                           )}
                           {lowCards.length > 0 && (
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                alert(`${lowCards.length} Low Priority Emails\n\nThese emails are informational and can be reviewed later.`);
-                              }}
-                              className="text-amber-400 text-sm font-bold hover:bg-amber-500/20 px-1 py-0.5 rounded transition-all"
-                            >
-                              {lowCards.length}
-                            </button>
+                            <div className="relative group">
+                              <button 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  alert(`${lowCards.length} Low Priority Emails\n\nThese emails are informational and can be reviewed later.`);
+                                }}
+                                className="text-amber-400 text-sm font-bold hover:bg-amber-500/20 px-1 py-0.5 rounded transition-all"
+                              >
+                                {lowCards.length}
+                              </button>
+                              {/* Hover tooltip */}
+                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-amber-600 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-xl">
+                                <div className="font-bold">{lowCards.length} Low Priority</div>
+                                <div className="text-amber-100">Review later</div>
+                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-amber-600"></div>
+                              </div>
+                            </div>
                           )}
                         </div>
                       </button>
